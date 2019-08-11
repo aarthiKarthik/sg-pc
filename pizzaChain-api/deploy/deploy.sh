@@ -135,7 +135,7 @@ NPM_CMD="npm"
 # 4. KuduSync
 echo Running KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
-  "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
+  "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE/pizzachain-api" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
   exitWithMessageOnError "Kudu Sync failed"
 fi
 
@@ -146,9 +146,9 @@ if [ -e "$DEPLOYMENT_SOURCE/web.config" ]; then
 fi
 
 echo Installing Truffle 
-if [ -e "$DEPLOYMENT_SOURCE/../truffle" ]; then
+if [ -e "$DEPLOYMENT_SOURCE/truffle" ]; then
   mkdir -p "$DEPLOYMENT_TARGET/truffle"
-  cp -R "$DEPLOYMENT_SOURCE/../truffle/" "$DEPLOYMENT_TARGET/truffle/"
+  cp -R "$DEPLOYMENT_SOURCE/truffle/" "$DEPLOYMENT_TARGET/truffle/"
   echo Truffle Folder Copied
   cd "$DEPLOYMENT_TARGET/truffle"
   echo "Running Truffle $NPM_CMD install"
@@ -169,13 +169,12 @@ if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   exitWithMessageOnError "npm failed"
   cd - > /dev/null
 fi
-# 3. Build React App
-echo Building React App
-if [ -e "$DEPLOYMENT_SOURCE/node_modules" ]; then
-  cd "$DEPLOYMENT_SOURCE"
-  eval $NPM_CMD run build
-  echo Building React App Completed
-  exitWithMessageOnError "building react app failed"
+# 3. App
+echo App work
+if [ -e "$DEPLOYMENT_TARGET" ]; then
+  cd "$DEPLOYMENT_TARGET"
+  echo Starting App
+  eval $NPM_CMD start
   cd - > /dev/null
 fi
 
