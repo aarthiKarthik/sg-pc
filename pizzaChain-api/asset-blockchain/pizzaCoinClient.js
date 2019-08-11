@@ -6,6 +6,9 @@ const config = require('../config/api-config');
 const pizzaChainConstants = require('../constants/pizzaChainConstants');
 
 const pizzaCoinJSON = require(path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json'));
+if (process.env.NODE_ENV === "prod") {
+    pizzaCoinJSON = require(path.join(__dirname, '../truffle/build/contracts/PizzaCoin.json'));
+}
 const configProperties = config.getProps();
 
 //<TODO> move to api-config

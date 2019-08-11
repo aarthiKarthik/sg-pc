@@ -163,7 +163,7 @@ if [ -e "$DEPLOYMENT_SOURCE/truffle" ]; then
   cp -R "$DEPLOYMENT_SOURCE/truffle" "$DEPLOYMENT_TARGET"
   echo Truffle Folder Copied
   cd "$DEPLOYMENT_TARGET/truffle"
-  echo "Running Truffle $NPM_CMD install"
+  echo "Running Truffle $NPM_CMD install at $DEPLOYMENT_TARGET/truffle"
   eval $NPM_CMD install 
   echo Compiling contracts
   ./node_modules/.bin/truffle compile 

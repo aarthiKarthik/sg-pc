@@ -4,7 +4,7 @@ const path = require('path');
 const config = require('../config/api-config');
 const pizzaChainConstants = require('../constants/pizzaChainConstants');
 
-const itemTokenJSON = require(path.join(__dirname, '../../truffle/build/contracts/ItemToken.json'));
+const itemTokenJSON = require(path.join(__dirname, '../truffle/build/contracts/ItemToken.json'));
 
 const configProperties = config.getProps();
 
