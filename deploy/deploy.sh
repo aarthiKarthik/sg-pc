@@ -149,9 +149,11 @@ fi
 echo Installing NPM Packages
 if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   cd "$DEPLOYMENT_TARGET"
+  echo Clearing node node_modules
+  eval rm -rf node_modules
   echo "Running $NPM_CMD install"
   #eval $NPM_CMD install --production
-  eval $NPM_CMD install 
+  eval $NPM_CMD install --loglevel=error
   exitWithMessageOnError "npm failed"
   cd - > /dev/null
 fi
@@ -163,8 +165,10 @@ if [ -e "$DEPLOYMENT_SOURCE/truffle" ]; then
   cp -R "$DEPLOYMENT_SOURCE/truffle" "$DEPLOYMENT_TARGET"
   echo Truffle Folder Copied
   cd "$DEPLOYMENT_TARGET/truffle"
+  echo Clearing node node_modules
+  eval rm -rf node_modules
   echo "Running Truffle $NPM_CMD install at $DEPLOYMENT_TARGET/truffle"
-  eval $NPM_CMD install 
+  eval $NPM_CMD install --loglevel=error
   echo Compiling contracts
   ./node_modules/.bin/truffle compile 
   echo Migrating contracts
