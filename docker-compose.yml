@@ -1,0 +1,25 @@
+version: "3"
+services:
+  ganache:
+    image: trufflesuite/ganache-cli:latest
+    ports:
+      - "8545:8545"
+
+  truffle:
+    build: ./truffle
+    depends_on:
+      - ganache
+    links:
+      - ganache
+
+  api:
+    build: ./pizzaChain-api
+    ports:
+      - "3003:3003"
+    depends_on:
+      - truffle
+    
+  ui:
+    build: ./ui/pizzachain
+    ports:
+      - "3000:3000"

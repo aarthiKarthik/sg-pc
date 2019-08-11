@@ -1,0 +1,70 @@
+{
+  "root": [
+    {
+      "class": "Case of Whisky",
+		  "type": "Talisker",
+      "SKU": "1234xyz",
+      "description": "Case of 12 bottles 18 years old, single malt"
+    },
+    [ "Bottle01",
+      "Bottle02",
+      "Bottle03",
+      "Bottle04",
+      "Bottle05",
+      "Bottle06"]
+  ],
+  "Bottle01":[
+    {
+      "class": "Bottle01",
+      "model": "Talisker",
+      "SKU": "1222ghj",
+      "description": "0.75 cl"
+    },
+    []
+  ],
+  "Bottle02":[
+    {
+      "class": "Bottle02",
+      "model": "Talisker",
+      "SKU": "1222ghj",
+      "description": "0.75 cl"
+    },
+    []
+  ],
+  "Bottle03":[
+    {
+      "class": "Bottle03",
+      "model": "Talisker",
+      "SKU": "1222ghj",
+      "description": "0.75 cl"
+    },
+    []
+  ],
+  "Bottle04":[
+    {
+      "class": "Bottle04",
+      "model": "Talisker",
+      "SKU": "1222ghj",
+      "description": "0.75 cl"
+    },
+    []
+  ],
+  "Bottle05":[
+    {
+      "class": "Bottle05",
+      "model": "Talisker",
+      "SKU": "1222ghj",
+      "description": "0.75 cl"
+    },
+    []
+  ],
+  "Bottle06":[
+    {
+      "class": "Bottle06",
+      "model": "Talisker",
+      "SKU": "1222ghj",
+      "description": "0.75 cl"
+    },
+    []
+  ]
+}

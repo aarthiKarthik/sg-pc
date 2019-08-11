@@ -1,0 +1,3 @@
+#!/bin/bash
+curl -X GET http://localhost:8500/bzzr:/928e52c8fcc914c7e16067e6977ec1a2459c6435b51f27bf1a3b49c079c825c0/
+

@@ -1,0 +1,18 @@
+{
+    "MODEL_TYPES": {
+        "PROCUREMENT": "PROCUREMENT",
+        "PO": "PO",
+        "CHEESE_SUPPLIER_PRICE": "CHEESE_SUPPLIER_PRICE"
+    },
+
+    "PO_STATUS":{
+        "ISSUED": "PO_ISSUED",
+        "ACKNOWLEDGED": "PO_ACKNOWLEDGED",
+        "DELIVERED": "DELIVERED"
+    },
+
+    "INVOICE_STATUS":{
+        "ISSUED": "INVOICE_ISSUED",
+        "COMPLETED": "INVOICE_COMPLETED"
+    }
+}

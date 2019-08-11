@@ -1,0 +1,14 @@
+{
+  "root": [
+    {
+      "class": "FFB-TPE2",
+      "manufacturer": "3rd Party Estate-2",
+      "quantity": 250,
+      "uom": "mt",
+      "commodity": "Palm Oil",
+      "certified": "No",
+      "quality": 0
+    },
+    []
+  ]
+}

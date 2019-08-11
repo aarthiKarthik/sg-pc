@@ -1,0 +1,40 @@
+{
+  "root": [
+    {
+      "class": "Wheelbarrow",
+		  "model": "32C",
+      "SKU": "1234xyz",
+      "description": "wheelbarrow, heavy duty"
+    },
+    ["hopper", "frame"]
+  ],
+
+  "frame":[
+    {
+      "class": "Frame",
+      "model": "32C-f",
+      "SKU": "1222ghj",
+      "description": "tubular steel frame"
+    },
+    ["wheel_assembly"]
+  ],
+
+  "wheel_assembly":[
+    {
+      "class": "WheelAssembly",
+      "model": "32C-w",
+      "SKU": "3423edf",
+      "description": "wheel, bearings and bearing housing"
+    },
+    []
+  ],
+  "hopper":[
+    {
+      "class": "Hopper",
+      "model": "32C-h",
+      "SKU": "1267wsd",
+      "description": "sheet steel hopper"
+    },
+    []
+  ]
+}

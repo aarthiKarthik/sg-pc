@@ -1,0 +1,36 @@
+{
+  "root": [
+    {"name":"line pipe 1"},
+    ["line pipe 1"]
+  ],
+
+  "line pipe 1": [
+    {
+      "class": "line pipe 1",
+      "Manufacturer": "Tenaris",
+      "Serial Number": "1350917",
+      "Material type": "Stainless Steel",
+      "Size": "DN 1200",
+      "Wall thickness": "STD",
+      "Standard applied": "ASME",
+      "Wall thickness (nominal)": "9.53 mm",
+      "Pressure rating (bar)": "PN25",
+      "Type of pipe manufacturing": "Welded",
+      "Length":"6.5 m"
+    },
+    ["Coating"]
+  ],
+
+  "Coating": [
+    {
+      "class": "Coating",
+      "Coating status": "-",
+      "Wall thickness (real)": "mm",
+      "Coating (ext)": "Coating (colour)",
+      "Contractor": "External Coater X",
+      "Schedule": "Pick-up date: 27.02.2018, Due date: 27.03.2018",
+      "New ID": "00001-c"
+    },
+    []
+  ]
+}

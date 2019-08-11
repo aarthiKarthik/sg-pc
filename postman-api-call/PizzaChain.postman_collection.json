@@ -1,0 +1,2212 @@
+{
+	"info": {
+		"_postman_id": "5165fcb0-ab39-47cb-b4b1-1ee1da83f039",
+		"name": "PizzaChain",
+		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "purchase-order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1431c7b1-6836-470e-bbb0-333f8eb576d0",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"//console.log(jsonData.data);",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"PO Issued\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"object\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"required\": [",
+							"        \"transactionId\",",
+							"        \"poIds\"",
+							"      ],",
+							"      \"properties\": {",
+							"        \"transactionId\": {",
+							"          \"$id\": \"#/properties/data/properties/transactionId\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Transactionid Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"156518193309311253693149164867\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"poIds\": {",
+							"          \"$id\": \"#/properties/data/properties/poIds\",",
+							"          \"type\": \"array\",",
+							"          \"title\": \"The Poids Schema\",",
+							"          \"items\": {",
+							"            \"$id\": \"#/properties/data/properties/poIds/items\",",
+							"            \"type\": \"string\",",
+							"            \"title\": \"The Items Schema\",",
+							"            \"default\": \"\",",
+							"            \"examples\": [",
+							"              \"15651819330935674622921680426\",",
+							"              \"15651819331699055889256607157\"",
+							"            ],",
+							"            \"pattern\": \"^(.*)$\"",
+							"          }",
+							"        }",
+							"      }",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"transactionId\");",
+							"    pm.expect(pm.response.text()).to.include(\"poIds\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"PO Issued\");",
+							"    pm.expect(jsonData.err).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{\"supplierId\": \"CHEESECO\", \"itemType\":\"CHEESE\", \"qty\": 20, \"uom\":\"kg\"},\n\t{ \"supplierId\": \"DOUGHCO\", \"itemType\":\"DOUGH\", \"qty\": 50, \"uom\":\"kg\"}\n]"
+				},
+				"url": {
+					"raw": "localhost:3003/purchase-order",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"purchase-order"
+					]
+				},
+				"description": "To issue PO"
+			},
+			"response": []
+		},
+		{
+			"name": "purchase-order/:poId",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "15a8299f-5a7b-4fdf-a8bf-534493bd6761",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "9fb818a4-f614-4f5c-a0ca-ae946bc49d93",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"PO Retrieved\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"object\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"required\": [",
+							"        \"poId\",",
+							"        \"supplierId\",",
+							"        \"itemType\",",
+							"        \"qty\",",
+							"        \"uom\"",
+							"      ],",
+							"      \"properties\": {",
+							"        \"poId\": {",
+							"          \"$id\": \"#/properties/data/properties/poId\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Poid Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"15651739533332126315895899462\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"supplierId\": {",
+							"          \"$id\": \"#/properties/data/properties/supplierId\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Supplierid Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"CHEESECO\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"itemType\": {",
+							"          \"$id\": \"#/properties/data/properties/itemType\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Itemtype Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"CHEESE\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"qty\": {",
+							"          \"$id\": \"#/properties/data/properties/qty\",",
+							"          \"type\": \"integer\",",
+							"          \"title\": \"The Qty Schema\",",
+							"          \"default\": 0,",
+							"          \"examples\": [",
+							"            20",
+							"          ]",
+							"        },",
+							"        \"uom\": {",
+							"          \"$id\": \"#/properties/data/properties/uom\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Uom Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"kg\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        }",
+							"      }",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"poId\");",
+							"    pm.expect(pm.response.text()).to.include(\"supplierId\");",
+							"    pm.expect(pm.response.text()).to.include(\"itemType\");",
+							"    pm.expect(pm.response.text()).to.include(\"qty\");",
+							"    pm.expect(pm.response.text()).to.include(\"uom\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"PO Retrieved\");",
+							"    pm.expect(jsonData.err).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/purchase-order/:poId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"purchase-order",
+						":poId"
+					],
+					"variable": [
+						{
+							"key": "poId",
+							"value": "15651915115902566809164589714"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invoice/:poId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57cd8e2e-fcac-43d8-af4d-d34d64781227",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"Invoice Issued\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"156507341539919371839508664346\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"data\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Invoice Issued\");",
+							"    pm.expect(jsonData.err).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3003/invoice/:poId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"invoice",
+						":poId"
+					],
+					"variable": [
+						{
+							"key": "poId",
+							"value": "15651915115902566809164589714"
+						}
+					]
+				},
+				"description": "To issue Invoice by passing PO id"
+			},
+			"response": []
+		},
+		{
+			"name": "invoice/:invoiceId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b2fcbb2a-65ad-4b7e-9ff3-438115473307",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"Invoice Retrieved\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"object\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"required\": [",
+							"        \"invoiceId\",",
+							"        \"poId\",",
+							"        \"supplierId\",",
+							"        \"itemType\",",
+							"        \"qty\",",
+							"        \"uom\",",
+							"        \"price\"",
+							"      ],",
+							"      \"properties\": {",
+							"        \"invoiceId\": {",
+							"          \"$id\": \"#/properties/data/properties/invoiceId\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Invoiceid Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"15651836792616075211804198535\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"poId\": {",
+							"          \"$id\": \"#/properties/data/properties/poId\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Poid Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"3292d0c442c39d37159cc546\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"supplierId\": {",
+							"          \"$id\": \"#/properties/data/properties/supplierId\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Supplierid Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"CHEESECO\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"itemType\": {",
+							"          \"$id\": \"#/properties/data/properties/itemType\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Itemtype Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"CHEESE\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"qty\": {",
+							"          \"$id\": \"#/properties/data/properties/qty\",",
+							"          \"type\": \"integer\",",
+							"          \"title\": \"The Qty Schema\",",
+							"          \"default\": 0,",
+							"          \"examples\": [",
+							"            20",
+							"          ]",
+							"        },",
+							"        \"uom\": {",
+							"          \"$id\": \"#/properties/data/properties/uom\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Uom Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"kg\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"price\": {",
+							"          \"$id\": \"#/properties/data/properties/price\",",
+							"          \"type\": \"integer\",",
+							"          \"title\": \"The Price Schema\",",
+							"          \"default\": 0,",
+							"          \"examples\": [",
+							"            200",
+							"          ]",
+							"        }",
+							"      }",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"invoiceId\");",
+							"    pm.expect(pm.response.text()).to.include(\"poId\");",
+							"    pm.expect(pm.response.text()).to.include(\"supplierId\");",
+							"    pm.expect(pm.response.text()).to.include(\"itemType\");",
+							"    pm.expect(pm.response.text()).to.include(\"qty\");",
+							"    pm.expect(pm.response.text()).to.include(\"uom\");",
+							"    pm.expect(pm.response.text()).to.include(\"price\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Invoice Retrieved\");",
+							"    pm.expect(jsonData.err).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/invoice/:invoiceId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"invoice",
+						":invoiceId"
+					],
+					"variable": [
+						{
+							"key": "invoiceId",
+							"value": "15651836792616075211804198535"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "paySupplier/:invoiceId/:payerId/:supplierId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8fa161e2-55eb-402f-9aab-fdc5854e9407",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"Payment done\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"0x520adfd539c90c22cc226b8e2bdf9c55a3c19cac3b59d73bc1d8dee561c45575\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"data\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Payment done\");",
+							"    pm.expect(jsonData.err).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/paySupplier/:invoiceId/:payerId/:supplierId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"paySupplier",
+						":invoiceId",
+						":payerId",
+						":supplierId"
+					],
+					"variable": [
+						{
+							"key": "invoiceId",
+							"value": "15651836792616075211804198535"
+						},
+						{
+							"key": "payerId",
+							"value": "1"
+						},
+						{
+							"key": "supplierId",
+							"value": "2"
+						}
+					]
+				},
+				"description": "To make payment to supplier"
+			},
+			"response": []
+		},
+		{
+			"name": "makeTokens/:invoiceId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f01479c9-0700-48f1-9af7-44d62cd1bfdc",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"QR Code generated\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"images/qr-codes/0x79c28888274f05726cef552e2ecc121578fd84f008397a4443c7d02ad2a6af87.svg\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"data\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"QR Code generated\");",
+							"    pm.expect(jsonData.err).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/makeTokens/:invoiceId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"makeTokens",
+						":invoiceId"
+					],
+					"variable": [
+						{
+							"key": "invoiceId",
+							"value": "15651836792616075211804198535"
+						}
+					]
+				},
+				"description": "To make ERC721 token for the ordered item"
+			},
+			"response": []
+		},
+		{
+			"name": "transferToken/:invoiceId/:supplierId/:payerId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cf88cfef-c797-4b3a-a4df-6455149ab37a",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"Token Metadata Retrieved\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"object\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"required\": [",
+							"        \"invoiceId\",",
+							"        \"itemType\",",
+							"        \"uom\",",
+							"        \"qty\",",
+							"        \"price\"",
+							"      ],",
+							"      \"properties\": {",
+							"        \"invoiceId\": {",
+							"          \"$id\": \"#/properties/data/properties/invoiceId\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Invoiceid Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"15651836792616075211804198535\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"itemType\": {",
+							"          \"$id\": \"#/properties/data/properties/itemType\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Itemtype Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"CHEESE\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"uom\": {",
+							"          \"$id\": \"#/properties/data/properties/uom\",",
+							"          \"type\": \"string\",",
+							"          \"title\": \"The Uom Schema\",",
+							"          \"default\": \"\",",
+							"          \"examples\": [",
+							"            \"kg\"",
+							"          ],",
+							"          \"pattern\": \"^(.*)$\"",
+							"        },",
+							"        \"qty\": {",
+							"          \"$id\": \"#/properties/data/properties/qty\",",
+							"          \"type\": \"integer\",",
+							"          \"title\": \"The Qty Schema\",",
+							"          \"default\": 0,",
+							"          \"examples\": [",
+							"            20",
+							"          ]",
+							"        },",
+							"        \"price\": {",
+							"          \"$id\": \"#/properties/data/properties/price\",",
+							"          \"type\": \"integer\",",
+							"          \"title\": \"The Price Schema\",",
+							"          \"default\": 0,",
+							"          \"examples\": [",
+							"            200",
+							"          ]",
+							"        }",
+							"      }",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"invoiceId\");",
+							"    pm.expect(pm.response.text()).to.include(\"itemType\");",
+							"    pm.expect(pm.response.text()).to.include(\"qty\");",
+							"    pm.expect(pm.response.text()).to.include(\"uom\");",
+							"    pm.expect(pm.response.text()).to.include(\"price\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Token Metadata Retrieved\");",
+							"    pm.expect(jsonData.err).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/transferToken/:tokenId/:supplierId/:payerId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"transferToken",
+						":tokenId",
+						":supplierId",
+						":payerId"
+					],
+					"variable": [
+						{
+							"key": "tokenId",
+							"value": "0x145eb46dd6e892606f98912604924590134f4658754ccfbe83c7d46a4fc468b1"
+						},
+						{
+							"key": "supplierId",
+							"value": "2"
+						},
+						{
+							"key": "payerId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "asset/:hash",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2c7bb412-5e88-457b-8091-238c4a9f2121",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"invoiceId\",",
+							"    \"itemType\",",
+							"    \"uom\",",
+							"    \"qty\",",
+							"    \"price\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"invoiceId\": {",
+							"      \"$id\": \"#/properties/invoiceId\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Invoiceid Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"15651836792616075211804198535\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"itemType\": {",
+							"      \"$id\": \"#/properties/itemType\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Itemtype Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"CHEESE\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"uom\": {",
+							"      \"$id\": \"#/properties/uom\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Uom Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"kg\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"qty\": {",
+							"      \"$id\": \"#/properties/qty\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Qty Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        20",
+							"      ]",
+							"    },",
+							"    \"price\": {",
+							"      \"$id\": \"#/properties/price\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Price Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"invoiceId\");",
+							"    pm.expect(pm.response.text()).to.include(\"itemType\");",
+							"    pm.expect(pm.response.text()).to.include(\"uom\");",
+							"    pm.expect(pm.response.text()).to.include(\"qty\");",
+							"    pm.expect(pm.response.text()).to.include(\"price\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3002/asset/:hash",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"asset",
+						":hash"
+					],
+					"variable": [
+						{
+							"key": "hash",
+							"value": "145eb46dd6e892606f98912604924590134f4658754ccfbe83c7d46a4fc468b1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "asset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eefd338b-21b2-45c8-bb39-f75d025504ac",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"rootHash\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"rootHash\": {",
+							"      \"$id\": \"#/properties/rootHash\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Roothash Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"998b173f9d5efe6aabc533767ceac0f575ae91eb59c6ab3cfe0a94cf1052a2fd\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"rootHash\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"itemId\":\"CH01\",\"uom\": \"KG\",\"qty\": 10,\"description\": \"Parmesan Cheese\"}"
+				},
+				"url": {
+					"raw": "localhost:3002/asset",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"asset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getItemDetails/:tokenId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/getItemDetails/:tokenId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"getItemDetails",
+						":tokenId"
+					],
+					"variable": [
+						{
+							"key": "tokenId",
+							"value": "0xf209ee26b4495b32981ac1e0f76b7c76cd6c0b51d7215503f681fc3c31d9db98"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "generateQrCode/:supplierId/:tokenId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/generateQrCode/:supplierId/:tokenId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"generateQrCode",
+						":supplierId",
+						":tokenId"
+					],
+					"variable": [
+						{
+							"key": "supplierId",
+							"value": "C01"
+						},
+						{
+							"key": "tokenId",
+							"value": "10001"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "purchase-order list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c54dc563-0898-4533-8574-c553d758e3df",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"PO List Retrieved\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"array\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"items\": {",
+							"        \"$id\": \"#/properties/data/items\",",
+							"        \"type\": \"string\",",
+							"        \"title\": \"The Items Schema\",",
+							"        \"default\": \"\",",
+							"        \"examples\": [",
+							"          \"13bfa8e5c6de8e5feaaf5ce846\",",
+							"          \"13bfaa7eb866f893fb05674627\"",
+							"        ],",
+							"        \"pattern\": \"^(.*)$\"",
+							"      }",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"data\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"PO List Retrieved\");",
+							"    pm.expect(jsonData.err).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/purchase-order",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"purchase-order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invoice list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "712ec8de-66fa-4af2-991c-cb6030c794e3",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"PO List Retrieved\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"array\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"items\": {",
+							"        \"$id\": \"#/properties/data/items\",",
+							"        \"type\": \"string\",",
+							"        \"title\": \"The Items Schema\",",
+							"        \"default\": \"\",",
+							"        \"examples\": [",
+							"          \"13bfa8e5c6de8e5feaaf5ce846\",",
+							"          \"13bfaa7eb866f893fb05674627\"",
+							"        ],",
+							"        \"pattern\": \"^(.*)$\"",
+							"      }",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"data\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Invoice List Retrieved\");",
+							"    pm.expect(jsonData.err).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/invoice",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"invoice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "balance/:entityId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "10ebc3c1-5a9c-4082-87ca-e666610dc026",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"Balance Retrieved\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        0",
+							"      ]",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"data\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Balance Retrieved\");",
+							"    pm.expect(jsonData.err).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/balance/:entityId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"balance",
+						":entityId"
+					],
+					"variable": [
+						{
+							"key": "entityId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tokenBalance/:entityId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9277eb5f-dbe8-4991-9837-dcf99e1b6e09",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        200",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"Balance Retrieved\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        0",
+							"      ]",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"data\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Balance Retrieved\");",
+							"    pm.expect(jsonData.err).to.eql(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/tokenBalance/:entityId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"tokenBalance",
+						":entityId"
+					],
+					"variable": [
+						{
+							"key": "entityId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "purchase-order (negative test)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1431c7b1-6836-470e-bbb0-333f8eb576d0",
+						"exec": [
+							"pm.test(\"Status code is 500\", function () {",
+							"    pm.response.to.have.status(500);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        500",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"Error in Issue PO\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"object\",",
+							"      \"title\": \"The Data Schema\"",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"invalid string value (arg=\\\"_supplierId\\\", coderType=\\\"string\\\", value=undefined)\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"data\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Error in Issue PO\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{ \"itemType\":\"CHEESE\", \"qty\": 20, \"uom\":\"kg\"},\n\t{ \"supplierId\": \"DOUGHCO\", \"itemType\":\"DOUGH\", \"qty\": 50, \"uom\":\"kg\"}\n]"
+				},
+				"url": {
+					"raw": "localhost:3003/purchase-order",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"purchase-order"
+					]
+				},
+				"description": "missing supplier id"
+			},
+			"response": []
+		},
+		{
+			"name": "purchase-order/:poId (negative test)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "15a8299f-5a7b-4fdf-a8bf-534493bd6761",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "9fb818a4-f614-4f5c-a0ca-ae946bc49d93",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        404",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"Error in Get PO by Id\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"PO Not Found\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"data\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Error in Get PO by Id\");",
+							"    pm.expect(jsonData.data).to.eql(null);",
+							"    pm.expect(jsonData.err).to.eql(\"PO Not Found\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/purchase-order/:poId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"purchase-order",
+						":poId"
+					],
+					"variable": [
+						{
+							"key": "poId",
+							"value": "1222"
+						}
+					]
+				},
+				"description": "po id is not found in records"
+			},
+			"response": []
+		},
+		{
+			"name": "invoice/:poId (negative test)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "57cd8e2e-fcac-43d8-af4d-d34d64781227",
+						"exec": [
+							"pm.test(\"Status code is 500\", function () {",
+							"    pm.response.to.have.status(500);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        500",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"Error in Issue PO\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"object\",",
+							"      \"title\": \"The Data Schema\"",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"invalid string value (arg=\\\"_supplierId\\\", coderType=\\\"string\\\", value=undefined)\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"data\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Error in Issue Invoice\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3003/invoice/:poId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"invoice",
+						":poId"
+					],
+					"variable": [
+						{
+							"key": "poId",
+							"value": "111"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invoice/:invoiceId (negative test)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b2fcbb2a-65ad-4b7e-9ff3-438115473307",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"var schema = {",
+							"  \"definitions\": {},",
+							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+							"  \"$id\": \"http://example.com/root.json\",",
+							"  \"type\": \"object\",",
+							"  \"title\": \"The Root Schema\",",
+							"  \"required\": [",
+							"    \"code\",",
+							"    \"message\",",
+							"    \"data\",",
+							"    \"err\"",
+							"  ],",
+							"  \"properties\": {",
+							"    \"code\": {",
+							"      \"$id\": \"#/properties/code\",",
+							"      \"type\": \"integer\",",
+							"      \"title\": \"The Code Schema\",",
+							"      \"default\": 0,",
+							"      \"examples\": [",
+							"        404",
+							"      ]",
+							"    },",
+							"    \"message\": {",
+							"      \"$id\": \"#/properties/message\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Message Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"Error in Get PO by Id\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    },",
+							"    \"data\": {",
+							"      \"$id\": \"#/properties/data\",",
+							"      \"type\": \"null\",",
+							"      \"title\": \"The Data Schema\",",
+							"      \"default\": null,",
+							"      \"examples\": [",
+							"        null",
+							"      ]",
+							"    },",
+							"    \"err\": {",
+							"      \"$id\": \"#/properties/err\",",
+							"      \"type\": \"string\",",
+							"      \"title\": \"The Err Schema\",",
+							"      \"default\": \"\",",
+							"      \"examples\": [",
+							"        \"PO Not Found\"",
+							"      ],",
+							"      \"pattern\": \"^(.*)$\"",
+							"    }",
+							"  }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"code\");",
+							"    pm.expect(pm.response.text()).to.include(\"message\");",
+							"    pm.expect(pm.response.text()).to.include(\"data\");",
+							"    pm.expect(pm.response.text()).to.include(\"err\");",
+							"});",
+							"",
+							"pm.test(\"Test Value\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Error in Get Invoice by Id\");",
+							"    pm.expect(jsonData.data).to.eql(null);",
+							"    pm.expect(jsonData.err).to.eql(\"Invoice Not Found\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/invoice/:invoiceId",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"invoice",
+						":invoiceId"
+					],
+					"variable": [
+						{
+							"key": "invoiceId",
+							"value": "1111"
+						}
+					]
+				},
+				"description": "invalid invoice id"
+			},
+			"response": []
+		}
+	]
+}

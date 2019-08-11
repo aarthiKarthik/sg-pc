@@ -1,0 +1,4 @@
+node_modules
+truffle/build
+pizzaChain-api/images/qr-codes
+swarm-service/leveldb

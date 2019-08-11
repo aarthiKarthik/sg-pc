@@ -1,0 +1,14 @@
+{
+  "root": [
+    {
+      "class": "FFB-TPE1-C",
+      "manufacturer": "3rd Party Estate-1",
+      "quantity": 250,
+      "uom": "mt",
+      "commodity": "Palm Oil",
+      "certified": "CSPO-IP",
+      "quality": 100
+    },
+    []
+  ]
+}

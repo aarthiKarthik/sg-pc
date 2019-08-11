@@ -1,0 +1,18 @@
+{
+  "root": [
+    {"name":"Tennamaram"},
+    ["Tennamaram"]
+  ],
+  "Tennamaram": [
+    {
+      "class": "FFB",
+      "Quantity": "0",
+      "UOM": "mt",
+      "Manufacturer": "Tennamaram",
+      "Commodity": "Palm Oil",
+      "Certified": "RSPO-IP",
+      "Quality": "100"
+    },
+    []
+  ]
+}

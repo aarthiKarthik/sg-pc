@@ -1,0 +1,14 @@
+{
+  "root": [
+    {
+      "class": "CPO-FGVMemOM",
+      "manufacturer": "FGV Mempaga OM",
+      "quantity": 50,
+      "uom": "mt",
+      "commodity": "Palm Oil",
+      "certified": "No",
+      "quality": 0
+    },
+    []
+  ]
+}

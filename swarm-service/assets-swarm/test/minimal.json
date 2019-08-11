@@ -1,0 +1,15 @@
+{
+  "root": [
+    {"name":"MyLittleAsset"},
+    ["MyActualAsset"]
+  ],
+  "myactualasset": [
+    {
+      "class": "actualasset",
+		  "model": "32C",
+      "SKU": "1234xyz",
+      "description": "wheelbarrow, heavy duty"
+    },
+    []
+  ]
+}

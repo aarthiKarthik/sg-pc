@@ -1,0 +1,14 @@
+{
+  "root": [
+    {
+      "class": "CPO-JabOM-C",
+      "manufacturer": "Jabor OM",
+      "quantity": 100,
+      "uom": "mt",
+      "commodity": "Palm Oil",
+      "certified": "CSPO-MB",
+      "quality": 50
+    },
+    []
+  ]
+}

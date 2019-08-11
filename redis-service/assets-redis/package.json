@@ -1,0 +1,19 @@
+{
+  "name": "assets-redis",
+  "version": "0.0.1",
+  "description": "Microservice for managing assets on redis",
+  "main": "restapi.js",
+  "scripts": {
+    "start": "node src/restapi.js",
+    "test": "./test-run"
+  },
+  "author": "aarthi.kannan@sg.ey.com",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "jsonfile": "^4.0.0",
+    "redis": "^2.8.0"
+  }
+}

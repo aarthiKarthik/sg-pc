@@ -1,0 +1,8 @@
+# Cleaning up
+# You need to perform this feature manually
+# USE THESE COMMANDS AT YOUR OWN RISK!
+##
+kill -9 $(ps aux | grep swarm | grep bzzaccount | awk '{print $2}')
+kill -9 $(ps aux | grep geth | grep datadir | awk '{print $2}')
+rm -rf /tmp/BZZ
+

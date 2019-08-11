@@ -1,0 +1,43 @@
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m'
+pgrep -qf "swarm"
+rc=$?
+if [[ $rc -eq 0 ]]; then
+     printf "${GREEN}Swarm running${NC}\n"
+else
+     echo "Swarm not running: try running test/swarm-up to start it"
+     exit 1
+fi
+
+pgrep -qf "geth"
+rc=$?
+if [[ $rc -eq 0 ]]; then
+     printf "${GREEN}Geth running${NC}\n"
+else
+     echo "Geth not running: try running test/swarm-up to start it"
+     exit 1
+fi
+sleep 1
+pgrep -qf "restapi"
+rc=$?
+if [[ $rc -eq 0 ]]; then
+     echo "Stopping Opschain as state is unknown"
+     pkill -f "restapi"
+     sleep 1
+fi
+
+echo "Attempting to start Assets-Swarm Microservice with Swarm database..."
+node src/restapi.js --swarm > /dev/null &
+rc=$?
+if [[ $rc -ne 0 ]]; then
+     printf "${RED}Could not start rest API${NC}\n"
+     exit 1
+fi
+
+sleep 1
+printf "${GREEN}Environment good. Starting test run....${NC}\n"
+sleep 2
+mocha
+echo "Test run complete - cleaning up"
+pkill -f "restapi"

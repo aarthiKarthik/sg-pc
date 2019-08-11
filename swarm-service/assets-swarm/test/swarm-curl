@@ -1,0 +1,2 @@
+#!/bin/bash
+curl -H "Content-Type: text/plain" --data-binary "some-data" http://localhost:8500/bzzr:/

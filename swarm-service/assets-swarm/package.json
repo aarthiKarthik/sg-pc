@@ -1,0 +1,24 @@
+{
+  "name": "assets-swarm",
+  "version": "0.0.1",
+  "description": "Microservice for managing assets on Swarm (or leveldb)",
+  "main": "restapi.js",
+  "scripts": {
+    "start": "node src/restapi.js --swarm",
+    "test": "./test-run"
+  },
+  "author": "duncan.westland@uk.ey.com",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "jsonfile": "^4.0.0",
+    "keccakjs": "^0.2.1",
+    "leveldown": "^2.0.0",
+    "levelup": "^2.0.0",
+    "request": "^2.83.0",
+    "web3": "^0.19.1",
+    "yargs": "^9.0.1"
+  }
+}

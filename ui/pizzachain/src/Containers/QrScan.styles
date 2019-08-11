@@ -1,0 +1,78 @@
+const styles = {
+  root: {
+    position: "relative"
+  },
+  Header: {
+    position: "absolute",
+    marginTop: "17px",
+    marginBottom: "43px",
+    fontSize: "16px",
+    fontFamily: "Noto Sans SC",
+    color: "#F2F2F2",
+    zIndex: "2999"
+  },
+  backButton: {
+    color: theme.palette.white.secondary,
+    outline: '0 !important',
+    border: '0 !important',
+    marginTop: "17px !important ",
+    marginLeft: "17px",
+    lineHeight: "0",
+    padding: "0",
+    minWidth: "50px",
+    boxShadow: 'none !important',
+    alignItem: "left",
+    position: 'absolute',
+    zIndex: "2999"
+  },
+  scan: {
+    // width: "100vh",
+    // position: "relative",
+    '& section': {
+      width: '100% !important',
+      height: '100% !important',
+      overflow: 'hidden !important',
+      position: 'fixed !important',
+      paddingTop: '0% !important',
+    },
+    // '& div': {
+    //   position: "relative !important",
+    // }
+  },
+  sendButtonGrid: {
+    color: "#F2F2F2",
+    position: "absolute !important",
+    zIndex: "2995",
+    // bottom: "1px"
+  },
+  sendButton: {
+    zIndex: "2999",
+    borderRadius: '0px',
+  },
+  dummyGrid: {
+    position: "relative !important"
+  },
+  skipButton: {
+    height: "40px",
+    // width: "280px",
+    color: theme.palette.white.secondary,
+    border: "solid  0.4px #F2F2F2",
+    fontSize: "14px",
+    marginTop: "120px",
+    borderRadius: '30px',
+    // bottom: 50,
+    textTransform: "none",
+    position: 'absolute',
+    background: theme.palette.pink.main,
+    backgroundImage: 'linear-gradient(to bottom left,theme.palette.pink.main,theme.palette.pink.secondary)',
+    "&:hover": {
+      backgroundColor: theme.palette.pink.main,
+      backgroundImage: 'linear-gradient(to bottom left,theme.palette.pink.main,theme.palette.pink.secondary)',
+    }
+
+  },
+
+
+};
+
+export default styles;

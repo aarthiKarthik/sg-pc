@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+/*******************************************************************************
+*                             controller.js
+*  Backend for the restAPI.  This contains functions that the restAPI can call
+* to manipulate Assets.  It makes use of assetlib.js.  This module does not
+* interact with the blockchain - those functions are in TBD
+*
+* version 0.0.1
+*******************************************************************************/
+
+'use strict';
+const levelup = require('levelup');
+const leveldown = require('leveldown');
+const jsonfile = require("jsonfile");
+const Asset = require('./asset.js');
+const treetools = require('./assetlib.js');
+const swarm = require('./swarm.js')
+
+/**
+Assets are stored in a key->value store where the key is the keccak256 hash
+of the asset. By default Leveldb is used but reading and writing is abstracted
+to retriever and storer functions so they can be re-pointed at other storage
+solutions
+**/
+//const storer = defaultStorer;
+//const retriever = defaultRetriever;
+var db = levelup(leveldown('../leveldb'));
+
+//reads the blockchain to determine the assets that the person currently owns
+//needs moving elsewhere because controller.js doesn't talk to the blockchain,
+//it's too posh.
+function getAssetsFromBlockchain(callback){
+  callback({});
+}
+
+/**
+create the asset tree from the Description json. Humans don't think in hashes
+therefore we need to describe an asset tree as a json file, which is more
+human-readable (and easier to create in a web-page).  Rather than hashes,
+descriptive names are used to link assets in a Description. See wheelbarrow.json
+for an example.
+@param {Object} description - contains a (parsed) JSON description of an asset
+tree in a human-readable form.  See wheelbarrow.json for an example.
+@param {Function} callback - callback returns the root hash of the newly created
+asset tree
+**/
+function createFromJson(storer, description, callback) {
+  treetools.createAssetTree(description, function(asset, isRoot){
+    //console.log(isRoot,asset);
+    storer(asset, function(isRoot){
+      //console.log(isRoot);
+      if (isRoot) {
+        //console.log(asset);
+        callback(JSON.stringify({rootHash: asset.getHash()}));
+      }
+    },isRoot);
+  });
+}
+
+/**
+Get an asset tree from the root hash.  This function returns an asset tree from
+a root hash.  The assets are returned as property values in an object, the hashes
+are the keys.
+@param {string} rootHash - the root hash of the asset tree that is required
+@param {Function} callback - callback funtion that returns a list-like object,
+which has properties with values that are the assets in the tree and keys
+which are their corresponding hashes.
+**/
+function getFromHash(retriever, rootHash, callback) {
+  retriever(rootHash, function(rootAsset){//get the root Asset from the hash
+    treetools.getAssetTree(rootAsset, retriever, callback);
+  });
+}
+
+/**
+@deprecated Since Swarm versions are now available this function is deprecated.
+This function retrieves an asset from a datasource, looked up by hash and
+passes it to the callback, along with any other args that the callback needs
+in ...args (the args are used by the recursive tree-traversing functions
+herein).  It can be replaced by another retriever function by repointing the
+retriever constant above. This function works with leveldb and so should only
+be used in certain development situations
+@param {string} hash - the hash of the asset to be retrieved
+@param {Function} callback - a callback that returns the asset and also any
+arguments passed in from ...args
+@param {Object} ...args - a list of arguments that are passed directly to the
+callback (these are needed for some recursive functions that use this function.
+They are not required for a simple retrieve of a asset and can be ommitted in
+that case)
+**/
+function defaultRetriever(hash, callback, ...args) {
+  db.get(hash, function(err, assetJson) {
+    if (err) {console.log(err);}
+    else {
+      var a = JSON.parse(assetJson).asset[0];
+      var d = JSON.parse(assetJson).asset[1];
+      callback(new Asset(a,d),...args);
+    }
+  });
+}
+
+/**
+@deprecated Since Swarm versions are now available this function is deprecated.
+This function stores an asset in a datasource.  When storage is complete
+it fires off a callback, passing in the args ...args.  This is useful so
+you know it's safe to read the data  It can be replaced by another storer
+function by repointing the storer constant above.This function works with
+leveldb and so should only be used in certain development situations
+@param {string} asset - the asset to be stored
+@param {Function} callback - a callback that returns when the asset is stored
+with any arguments passed in from ...args
+@param {Object} ...args - a list of arguments that are passed directly to the
+callback (these are needed for some recursive functions that use this function.
+They are not required for a simple storage of a asset and can be ommitted in
+that case)
+**/
+function defaultStorer(asset, callback, ...args) {
+  console.log("using levledb");
+  db.put(asset.getHash(), JSON.stringify(asset), function (err, value) {
+    if (err) {return console.log('Ooops!', err)} // some kind of I/O error
+    else {callback(...args);}
+  });
+}
+//export the functions so they can be used.
+module.exports.createFromJson = createFromJson;
+module.exports.getFromHash = getFromHash;
+module.exports.getAssetsFromBlockchain = getAssetsFromBlockchain;
+module.exports.defaultStorer = defaultStorer;
+module.exports.defaultRetriever = defaultRetriever;
+//-----examples of functions-----
+//treetools.traverseTree(assets["root"],retriever, console.log);
+//treetools.getParent(assets["root"], assets["wheel_assembly"], retriever, console.log);
+//var newAsset = new Asset(assets["frame"].getChildHashes(), {"newspec": "new specification"})
+//treetools.changeAsset(assets["root"], assets["frame"], newAsset, retriever, console.log);
+//treetools.getChildren(assets["wheelbarrow"], retriever, console.log);
+/*
+treetools.appendAsset(assets["root"], assets["wheelbarrow"], newAsset, retriever, function(asset, isRoot){
+  //console.log(asset.toString());
+  storer(asset, function(a,b,c) { //store the updated branch
+    if (isRoot) treetools.traverseTree(a,b,c); //print out the new tree
+    }, asset,retriever, console.log
+  );
+});*/
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Asset.html">Asset</a></li></ul><h3>Global</h3><ul><li><a href="global.html#appendAsset">appendAsset</a></li><li><a href="global.html#changeAsset">changeAsset</a></li><li><a href="global.html#createAssetTree">createAssetTree</a></li><li><a href="global.html#createFromJson">createFromJson</a></li><li><a href="global.html#db">db</a></li><li><a href="global.html#defaultRetriever">defaultRetriever</a></li><li><a href="global.html#defaultStorer">defaultStorer</a></li><li><a href="global.html#getAssetTree">getAssetTree</a></li><li><a href="global.html#getChildren">getChildren</a></li><li><a href="global.html#getFromHash">getFromHash</a></li><li><a href="global.html#getParent">getParent</a></li><li><a href="global.html#swarmHash">swarmHash</a></li><li><a href="global.html#swarmRetriever">swarmRetriever</a></li><li><a href="global.html#swarmStorer">swarmStorer</a></li><li><a href="global.html#traverseTree">traverseTree</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Dec 08 2017 12:54:56 GMT+0000 (GMT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

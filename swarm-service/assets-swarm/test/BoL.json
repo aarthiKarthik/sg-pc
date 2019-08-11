@@ -1,0 +1,15 @@
+{
+  "root": [
+    {
+      "class": "Bill of Lading",
+      "type": "Document",
+      "Shipment": "RDBPO",
+      "Port of origin": "Port Klang Refinery",
+      "Port of destination": "VVF India",
+      "quantity": 200,
+      "uom": "mt",
+      "commodity": "Palm Oil"
+    },
+    []
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "root": [
+    {
+      "class": "CPO-TenOM-C-01",
+      "manufacturer": "Tennamaram OM",
+      "quantity": 50,
+      "uom": "mt",
+      "commodity": "Palm Oil",
+      "certified": "CSPO-IP",
+      "quality": 100
+    },
+    []
+  ]
+}

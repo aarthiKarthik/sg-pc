@@ -1,0 +1,20 @@
+{
+  "root": [
+    {"name":"Uncoated pipe"},
+    ["Uncoated pipe"]
+  ],
+  "Uncoated pipe": [
+    {
+      "class": "Uncoated pipe",
+		  "Manufacturer": "Tenaris",
+      "Serial Number": "00001",
+      "Material type": "Chrome 13/25",
+      "Diameter": "DN 1200",
+      "Wall thickness": "160 mm",
+      "Pressure rating": "PN 25",
+      "Type":"Seamless",
+      "Length":"6.5 m"
+    },
+    []
+  ]
+}

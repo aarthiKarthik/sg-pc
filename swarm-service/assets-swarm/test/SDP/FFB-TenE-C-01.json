@@ -1,0 +1,14 @@
+{
+  "root": [
+    {
+      "class": "FFB-TenE-C-01",
+      "manufacturer": "Tennamaram Estate",
+      "quantity": 200,
+      "uom": "mt",
+      "commodity": "Palm Oil",
+      "certified": "CSPO-IP",
+      "quality": 100
+    },
+    []
+  ]
+}

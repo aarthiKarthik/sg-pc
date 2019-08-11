@@ -1,0 +1,14 @@
+{
+  "root": [
+    {
+      "class": "RBDPO-PK-1",
+      "manufacturer": "Port Klang Refinery",
+      "quantity": 200,
+      "uom": "mt",
+      "commodity": "Palm Oil",
+      "certified": "RSPO-MB",
+      "quality": 56
+    },
+    []
+  ]
+}

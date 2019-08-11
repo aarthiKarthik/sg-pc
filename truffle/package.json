@@ -1,0 +1,30 @@
+{
+  "name": "pizzaChain",
+  "version": "1.0.0",
+  "description": "pizzaChain smart-contracts",
+  "homepage": "https://github.com/EYBlockchain/pizzaChain",
+  "scripts": {
+    "test": "rm -rf build && bash scripts/test.sh"
+  },
+  "author": "EY Blockchain",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "bn-chai": "^1.0.1",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0",
+    "eth-gas-reporter": "^0.1.12",
+    "ethereumjs-util": "^6.1.0",
+    "ganache-cli": "^6.2.5",
+    "npm": "^6.8.0",
+    "openzeppelin-solidity": "^2.1.2",
+    "openzeppelin-test-helpers": "^0.1.5",
+    "truffle": "^5.0.4",
+    "web3": "^1.0.0-beta.33",
+    "web3-utils": "^1.0.0-beta.46"
+  },
+  "dependencies": {
+    "semver": "^5.6.0"
+  }
+}

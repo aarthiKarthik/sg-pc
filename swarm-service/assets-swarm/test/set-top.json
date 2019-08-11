@@ -1,0 +1,53 @@
+{
+  "root": [
+    {"name":"Set Top Box"},
+    ["Set Top Box"]
+  ],
+  "Set Top Box": [
+    {
+      "class": "Set Top Box",
+		  "model": "32C",
+      "SKU": "1234xyz",
+      "description": "Set Top Box - 2018 model"
+    },
+    ["hard disk", "cable assembly", "tuner unit"]
+  ],
+
+  "hard disk":[
+    {
+      "class": "hard disk",
+      "model": "32-hdu",
+      "SKU": "1222ghj",
+      "description": "hard disk 1TB SSD"
+    },
+    []
+  ],
+
+  "cable assembly":[
+    {
+      "class": "cable assembly",
+      "model": "32C-ca",
+      "SKU": "3423edf",
+      "description": "cable assembly: Northern Europe"
+    },
+    ["hdmi cable"]
+  ],
+  "tuner unit":[
+    {
+      "class": "tuner unit",
+      "model": "32C-tu",
+      "SKU": "1267wsd",
+      "description": "6 channel tuner assembly"
+    },
+    []
+  ],
+  "hdmi cable": [
+    {
+      "class": "hdmi cable",
+      "model": "32-hdmi",
+      "SKU": "233er",
+      "description": "gold-plated, extra flexible 1m"
+    },
+    []
+  ]
+}
