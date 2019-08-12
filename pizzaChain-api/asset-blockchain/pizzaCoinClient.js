@@ -5,9 +5,12 @@ const jsonfile = require("jsonfile");
 const config = require('../config/api-config');
 const pizzaChainConstants = require('../constants/pizzaChainConstants');
 
-const pizzaCoinJSON = require(path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json'));
+const pizzaCoinJSON //= require(path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json'));
 if (process.env.NODE_ENV === "prod") {
     pizzaCoinJSON = require(path.join(__dirname, 'truffle/build/contracts/PizzaCoin.json'));
+}
+else {
+    pizzaCoinJSON = require(path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json'));
 }
 const configProperties = config.getProps();
 
