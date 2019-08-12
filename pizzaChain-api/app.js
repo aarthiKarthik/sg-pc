@@ -34,7 +34,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-var mongoDBURI = `${configProperties.mongodb.host}:${configProperties.mongodb.port}/${configProperties.mongodb.database}`;
+var mongoDBURI = "mongodb://" + `${configProperties.mongodb.host}:${configProperties.mongodb.port}/${configProperties.mongodb.database}`;
 console.log('mongodb:', mongoDBURI);
 
 if (process.env.NODE_ENV === "prod") {
