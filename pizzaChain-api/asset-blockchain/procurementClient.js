@@ -4,7 +4,7 @@ const path = require('path');
 const config = require('../config/api-config');
 const procurementJSON = require(path.join(__dirname, '../../truffle/build/contracts/Procurement.json'));
 if (process.env.NODE_ENV === "prod") {
-    procurementJSON = require(path.join(__dirname, '../truffle/build/contracts/Procurement.json'));
+    procurementJSON = require(path.join(__dirname, 'truffle/build/contracts/Procurement.json'));
 }
 const pizzaChainConstants = require('../constants/pizzaChainConstants');
 
