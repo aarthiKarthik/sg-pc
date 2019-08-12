@@ -153,7 +153,7 @@ if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   eval rm -rf node_modules
   echo "Running $NPM_CMD install"
   #eval $NPM_CMD install --production
-  eval $NPM_CMD install --loglevel=error
+  eval $NPM_CMD install --supress-warnings
   exitWithMessageOnError "npm failed"
   cd - > /dev/null
 fi
@@ -168,7 +168,7 @@ if [ -e "$DEPLOYMENT_SOURCE/truffle" ]; then
   echo Clearing node node_modules
   eval rm -rf node_modules
   echo "Running Truffle $NPM_CMD install at $DEPLOYMENT_TARGET/truffle"
-  eval $NPM_CMD install --loglevel=error
+  eval $NPM_CMD install --supress-warnings
   echo Compiling contracts
   ./node_modules/.bin/truffle compile 
   echo Migrating contracts
@@ -179,7 +179,7 @@ fi
 echo App work
 if [ -e "$DEPLOYMENT_TARGET" ]; then
   cd "$DEPLOYMENT_TARGET"
-  echo Starting App
+  echo "Starting App in $DEPLOYMENT_TARGET"
   eval $NPM_CMD start
   cd - > /dev/null
 fi

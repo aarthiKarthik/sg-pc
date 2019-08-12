@@ -28,7 +28,7 @@ let props = {
       host: process.env.MONGO_DB,
       mongodb_user: process.env.MONGODB_USER,
       mongodb_password: process.env.MONGODB_PASSWORD,
-      port: 27017,
+      port: process.env.MONGODB_PORT,
       database: "pizzachain"
     },
     rpc:{
