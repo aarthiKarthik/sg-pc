@@ -7,7 +7,7 @@ const pizzaChainConstants = require('../constants/pizzaChainConstants');
 
 var pizzaCoinJSON; //= require(path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json'));
 if (process.env.NODE_ENV === "prod") {
-    pizzaCoinJSON = require(path.join(__dirname, 'truffle/build/contracts/PizzaCoin.json'));
+    pizzaCoinJSON = require(path.join(__dirname, '../truffle/build/contracts/PizzaCoin.json'));
 }
 else {
     pizzaCoinJSON = require(path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json'));
