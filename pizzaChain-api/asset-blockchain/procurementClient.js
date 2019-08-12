@@ -2,7 +2,7 @@ const contract = require('truffle-contract');
 const Web3 = require('web3');
 const path = require('path');
 const config = require('../config/api-config');
-const procurementJSON //= require(path.join(__dirname, '../../truffle/build/contracts/Procurement.json'));
+var procurementJSON; //= require(path.join(__dirname, '../../truffle/build/contracts/Procurement.json'));
 if (process.env.NODE_ENV === "prod") {
     procurementJSON = require(path.join(__dirname, 'truffle/build/contracts/Procurement.json'));
 }
