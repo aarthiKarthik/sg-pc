@@ -5,14 +5,14 @@ const app = express()
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const log = require('npmlog-ts');
-const router = express.Router();
-const config = require('./config/api-config');
-const api = require('./api-gateway/apiGatewayController');
 
+const config = require('./config/api-config');
 config.setEnv(process.env.NODE_ENV);
 console.log("process.env.NODE_ENV = "+process.env.NODE_ENV);
-
 const configProperties = config.getProps();
+
+const api = require('./api-gateway/apiGatewayController');
+const router = express.Router();
 
 // <TODO> Move PORT config to api-config
 const PORT = configProperties.port;
@@ -38,10 +38,22 @@ var mongoDBURI = "mongodb://" + `${configProperties.mongodb.host}:${configProper
 console.log('mongodb:', mongoDBURI);
 
 if (process.env.NODE_ENV === "prod") {
+    // var mongoClient = require("mongodb").MongoClient;
+    // mongoClient.connect("mongodb://pc-mongodb:LzzUKl9XSdhr55jWfGh8f9iBmWZvAxYiCxz4LrZdeT53QgYDj5JRqj5237lOjMolY9wErwpRxJd6bl6573HBeg%3D%3D@pc-mongodb.documents.azure.com:10255/?ssl=true", function (err, client) {
+    //     client.close();
+    // });
     mongoDBURI = decodeURIComponent(mongoDBURI);
     let user = decodeURIComponent(configProperties.mongodb.mongodb_user);
     let pass = decodeURIComponent(configProperties.mongodb.mongodb_password);
-    mongoose.connect(mongoDBURI, { auth: {user: user, password: pass}});
+    console.log("User: " + user, "Password: " + pass);
+    mongoose.connect(mongoDBURI+"?ssl=true&replicaSet=globaldb", { 
+        auth: {
+            user: user, 
+            password: pass
+        }
+    })
+    .then(() => console.log('Connection to CosmosDB successful'))
+    .catch((err) => console.error(err));
 }
 else {
     mongoose.connect(mongoDBURI);

@@ -162,17 +162,20 @@ fi
 echo Installing Truffle 
 if [ -e "$DEPLOYMENT_SOURCE/truffle" ]; then
   #mkdir -p "$DEPLOYMENT_TARGET/truffle"
+  rm -rf "$DEPLOYMENT_TARGET/truffle"
   cp -R "$DEPLOYMENT_SOURCE/truffle" "$DEPLOYMENT_TARGET"
   echo Truffle Folder Copied
   cd "$DEPLOYMENT_TARGET/truffle"
+  eval $NPM_CMD install -g truffle@5.0.31
   echo Clearing node node_modules
   eval rm -rf node_modules
   echo "Running Truffle $NPM_CMD install at $DEPLOYMENT_TARGET/truffle"
   eval $NPM_CMD install --supress-warnings
   echo Compiling contracts
-  ./node_modules/.bin/truffle compile 
+  eval rm -rf build/
+  truffle compile 
   echo Migrating contracts
-  ./node_modules/.bin/truffle migrate --reset --network=pcvm
+  truffle migrate --reset --network pcvm
 fi
 
 # 4. App

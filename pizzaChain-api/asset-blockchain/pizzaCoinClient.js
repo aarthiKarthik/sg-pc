@@ -5,13 +5,16 @@ const jsonfile = require("jsonfile");
 const config = require('../config/api-config');
 const pizzaChainConstants = require('../constants/pizzaChainConstants');
 
-var pizzaCoinJSON; //= require(path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json'));
+//var pizzaCoinJSON = require(path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json'));
+var pizzaCoinJSONPath;
 if (process.env.NODE_ENV === "prod") {
-    pizzaCoinJSON = require(path.join(__dirname, '../truffle/build/contracts/PizzaCoin.json'));
+    pizzaCoinJSONPath = path.join(__dirname, '../truffle/build/contracts/PizzaCoin.json');
 }
 else {
-    pizzaCoinJSON = require(path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json'));
+    pizzaCoinJSONPath = path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json');
+    //pizzaCoinJSON = require(path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json'));
 }
+const pizzaCoinJSON = require(pizzaCoinJSONPath);
 const configProperties = config.getProps();
 
 //<TODO> move to api-config
@@ -108,7 +111,7 @@ module.exports = {
 async function _transferAmt(fromAcct, toAcct, amount) {
     try {
         var count = await web3.eth.getTransactionCount(fromAcct);
-        var abiArray = await jsonfile.readFileSync('../truffle/build/contracts/PizzaCoin.json');
+        var abiArray = await jsonfile.readFileSync(pizzaCoinJSONPath);
         //parsed = JSON.parse(abiArray);
         abi = abiArray.abi;
         var contractAddress = await PizzaCoinContract.deployed();

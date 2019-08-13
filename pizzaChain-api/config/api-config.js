@@ -25,21 +25,21 @@ let props = {
   prod: {
     port: 3003,
     mongodb:{
-      host: process.env.MONGO_DB,
-      mongodb_user: process.env.MONGODB_USER,
-      mongodb_password: process.env.MONGODB_PASSWORD,
-      port: process.env.MONGODB_PORT,
+      host: /* process.env.MONGO_DB || */ "pc-mongodb.documents.azure.com",
+      mongodb_user: /* process.env.MONGODB_USER || */ "pc-mongodb",
+      mongodb_password: /* process.env.MONGODB_PASSWORD || */ "LzzUKl9XSdhr55jWfGh8f9iBmWZvAxYiCxz4LrZdeT53QgYDj5JRqj5237lOjMolY9wErwpRxJd6bl6573HBeg==",
+      port: /* process.env.MONGODB_PORT || */10255,
       database: "pizzachain"
     },
     rpc:{
-      host: process.env.GANACHE,
-      port: 8545,
+      host: /* process.env.GANACHE || */ "http://40.121.216.168",
+      port: 8545
     },
     qrCode:{
       path: "images/qr-codes/"
     },
     swarm:{
-      host: process.env.SWARM,
+      host: /* process.env.SWARM || */ "http://40.121.216.168",
       port: 3002,
       assetEndpoint: "asset"
     }
