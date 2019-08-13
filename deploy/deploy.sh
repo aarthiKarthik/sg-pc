@@ -166,16 +166,16 @@ if [ -e "$DEPLOYMENT_SOURCE/truffle" ]; then
   cp -R "$DEPLOYMENT_SOURCE/truffle" "$DEPLOYMENT_TARGET"
   echo Truffle Folder Copied
   cd "$DEPLOYMENT_TARGET/truffle"
-  eval $NPM_CMD install -g truffle@5.0.31
+  #eval $NPM_CMD install -g truffle@5.0.31
   echo Clearing node node_modules
   eval rm -rf node_modules
   echo "Running Truffle $NPM_CMD install at $DEPLOYMENT_TARGET/truffle"
   eval $NPM_CMD install --supress-warnings
   echo Compiling contracts
   eval rm -rf build/
-  truffle compile 
+  ./node_modules/.bin/truffle compile --quiet
   echo Migrating contracts
-  truffle migrate --reset --network pcvm
+  ./node_modules/.bin/truffle migrate --reset --network pcvm
 fi
 
 # 4. App
