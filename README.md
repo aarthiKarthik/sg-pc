@@ -4,9 +4,9 @@ A Demo to introduce the concepts behind Blockchain.
 ## Dependencies
 Install these prerequisites
 ```
-    1. Node version 11.15.0 
-    2. Truffle version 5.0.18
-    3. Ganache-cli
+    1. Node version 11.15.0 / 10.15.2 for Azure WebApp
+    2. Truffle version 5.0.31
+    3. Ganache-cli - 6.5.1
     4. MongoDB
     5. Swarm - Version: 0.3.10-stable
     6. Go Version: go1.11.5
