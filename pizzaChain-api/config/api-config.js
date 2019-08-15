@@ -23,7 +23,7 @@ let props = {
     }
   },
   prod: {
-    port: 3003,
+    port: process.env.PORT,
     mongodb:{
       host: /* process.env.MONGO_DB || */ "pc-mongodb.documents.azure.com",
       mongodb_user: /* process.env.MONGODB_USER || */ "pc-mongodb",
