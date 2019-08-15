@@ -132,7 +132,7 @@ echo Selecting NodeVersion
 NPM_CMD="npm"
 #call :SelectNodeVersion
 
-# 4. KuduSync
+# 1. KuduSync
 echo Running KuduSync
 if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
   "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE/pizzachain-api" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
@@ -145,38 +145,47 @@ if [ -e "$DEPLOYMENT_SOURCE/web.config" ]; then
   echo Web.config Copied
 fi
 
-echo Installing Truffle 
-if [ -e "$DEPLOYMENT_SOURCE/truffle" ]; then
-  mkdir -p "$DEPLOYMENT_TARGET/truffle"
-  cp -R "$DEPLOYMENT_SOURCE/truffle/" "$DEPLOYMENT_TARGET/truffle/"
-  echo Truffle Folder Copied
-  cd "$DEPLOYMENT_TARGET/truffle"
-  echo "Running Truffle $NPM_CMD install"
-  eval $NPM_CMD install 
-  echo Compiling contracts
-  ./node_modules/.bin/truffle compile 
-  echo Migrating contracts
-  ./node_modules/.bin/truffle migrate --reset --network=pcvm
-fi
-
 # 2. Install npm packages
 echo Installing NPM Packages
 if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
   cd "$DEPLOYMENT_TARGET"
+  echo Clearing node node_modules
+  eval rm -rf node_modules
   echo "Running $NPM_CMD install"
   #eval $NPM_CMD install --production
-  eval $NPM_CMD install 
+  eval $NPM_CMD install --supress-warnings
   exitWithMessageOnError "npm failed"
   cd - > /dev/null
 fi
-# 3. App
-echo App work
-if [ -e "$DEPLOYMENT_TARGET" ]; then
-  cd "$DEPLOYMENT_TARGET"
-  echo Starting App
-  eval $NPM_CMD start
-  cd - > /dev/null
+
+# 3. Installing truflle 
+echo Installing Truffle 
+if [ -e "$DEPLOYMENT_SOURCE/truffle" ]; then
+  #mkdir -p "$DEPLOYMENT_TARGET/truffle"
+  rm -rf "$DEPLOYMENT_TARGET/truffle"
+  cp -R "$DEPLOYMENT_SOURCE/truffle" "$DEPLOYMENT_TARGET"
+  echo Truffle Folder Copied
+  cd "$DEPLOYMENT_TARGET/truffle"
+  #eval $NPM_CMD install -g truffle@5.0.31
+  echo Clearing node node_modules
+  eval rm -rf node_modules
+  echo "Running Truffle $NPM_CMD install at $DEPLOYMENT_TARGET/truffle"
+  eval $NPM_CMD install --supress-warnings
+  echo Compiling contracts
+  eval rm -rf build/
+  ./node_modules/.bin/truffle compile --quiet
+  echo Migrating contracts
+  ./node_modules/.bin/truffle migrate --reset --network pcvm
 fi
+
+# 4. App
+# echo App work
+# if [ -e "$DEPLOYMENT_TARGET" ]; then
+#   cd "$DEPLOYMENT_TARGET"
+#   echo "Starting App in $DEPLOYMENT_TARGET"
+#   eval $NPM_CMD start
+#   cd - > /dev/null
+# fi
 
 ##################################################################################################################################
 echo "Finished successfully."

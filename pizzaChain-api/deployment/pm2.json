@@ -1,0 +1,5 @@
+{
+    "name": "pc-api2",
+    "script": "/home/site/wwwroot/deployment/run.sh",
+    "instances": 1
+}
