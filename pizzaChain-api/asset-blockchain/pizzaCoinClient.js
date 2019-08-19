@@ -13,7 +13,10 @@ else {
     pizzaCoinJSONPath = path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json');
 	//pizzaCoinJSON = require(path.join(__dirname, '../../truffle/build/contracts/PizzaCoin.json'));
 }
+
+const pizzaCoinJSON = require(pizzaCoinJSONPath);
 const configProperties = config.getProps();
+
 
 //<TODO> move to api-config
 
