@@ -6,13 +6,15 @@
     },
 
     "PO_STATUS":{
-        "ISSUED": "PO_ISSUED",
-        "ACKNOWLEDGED": "PO_ACKNOWLEDGED",
+        "ISSUED": "ISSUED",
+        "ACKNOWLEDGED": "ACKNOWLEDGED",
+        "PENDING_DELIVERY": "PENDING DELIVERY",
         "DELIVERED": "DELIVERED"
     },
 
     "INVOICE_STATUS":{
-        "ISSUED": "INVOICE_ISSUED",
-        "COMPLETED": "INVOICE_COMPLETED"
+        "ISSUED": "ISSUED",
+        "PAYMENT_RECEIVED": "PAYMENT RECEIVED",
+        "COMPLETED": "COMPLETED"
     }
 }

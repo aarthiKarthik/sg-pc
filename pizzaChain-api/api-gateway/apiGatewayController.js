@@ -4,6 +4,50 @@ const controller = require('../api-gateway/controller')
 
 let init = (router) => {
 
+    //To get procurement transactions
+    router.route('/transaction/:filter')
+        .get(async (req, res) => {
+            let response;
+            try {
+                response = await controller.getTransactions(req.params.filter);
+                res.status(response.code).json(response);
+            } catch (e) {
+                logger.error("API Gateway : /transaction/:filter : e = " + e);
+                response = new Response(500, "Error in Get Transactions", {}, e);
+                res.status(response.code).json(response);
+            }
+        })
+
+    //To get procurement by transaction id
+    router.route('/transaction/:id/:filter')
+        .get(async (req, res) => {
+            let response;
+            try {
+                response = await controller.getTransactionById(req.params.id, req.params.filter);
+                res.status(response.code).json(response);
+            } catch (e) {
+                logger.error("API Gateway : transaction/:id/:filter : e = " + e);
+                response = new Response(500, "Error in Get Transaction by Id", {}, e);
+                res.status(response.code).json(response);
+            }
+        })
+
+    //To get procurement by supplier id
+    router.route('/transaction-supplier/:supplierId/:filter')
+        .get(async (req, res) => {
+            let response;
+            try {
+                console.log("/transaction-supplier/:supplierId/:filter = "+ req.params.supplierId +"  -  "+ req.params.filter);
+                response = await controller.getTransactionBySupplierId(req.params.supplierId, req.params.filter);
+                res.status(response.code).json(response);
+            } catch (e) {
+                logger.error("API Gateway : transaction-supplier/:supplierId/:filter: e = " + e);
+                response = new Response(500, "Error in Get Transaction by Supplier Id", {}, e);
+                res.status(response.code).json(response);
+            }
+        })
+
+    //To issue PO    
     router.route('/purchase-order')
         .post(async (req, res) => {
             let response;
@@ -16,6 +60,7 @@ let init = (router) => {
                 res.status(response.code).json(response);
             }
         })
+
     //To get PO, given ID
     router.route('/purchase-order/:poId')
         .get(async (req, res) => {
@@ -29,6 +74,7 @@ let init = (router) => {
                 res.status(response.code).json(response);
             }
         })
+
     //To get all POs, returns po ids
     router.route('/purchase-order/')
         .get(async (req, res) => {
@@ -43,20 +89,6 @@ let init = (router) => {
             }
         })
 
-    //To get all POs with info details
-    router.route('/purchase-order-details/')
-        .get(async (req, res) => {
-            let response;
-            try {
-                response = await controller.getPODetailsList();
-                res.status(response.code).json(response);
-            } catch (e) {
-                logger.error("API Gateway : purchase-order-details : e = " + e);
-                response = new Response(500, "Error in retrieving list of PO Details", {}, e);
-                res.status(response.code).json(response);
-            }
-        })
-
     // To ack PO and issue Invoice, return the Invoice Id on success
     router.route('/invoice/:poId')
         .post(async (req, res) => {
@@ -65,7 +97,7 @@ let init = (router) => {
 
                 let poDataRes = await controller.ackPO(req.params.poId);
 
-                let response = await controller.issueInvoice(poDataRes.data);
+                let response = await controller.issueInvoice(poDataRes.data, req.query.itemPrice);
 
                 res.status(response.code).json(response);
 
@@ -170,12 +202,12 @@ let init = (router) => {
         .post(async (req, res) => {
             let response;
             try {
-                //get invoice details
-                let invoiceResponse = await controller.getInvoiceById(req.params.tokenId);
-                let poId = invoiceResponse.data.poId;
+
+                let transaction = await controller.getTransactionByTokenId(req.params.tokenId);
+                console.log("transaction = "+JSON.stringify(transaction));
 
                 //transfer item token to payer
-                await controller.transferToken(req.params.tokenId, req.params.supplierId, req.params.payerId, poId);
+                await controller.transferToken(req.params.tokenId, req.params.supplierId, req.params.payerId, transaction);
 
                 //get token metadata
                 response = await controller.retrieveMetadata(req.params.tokenId);

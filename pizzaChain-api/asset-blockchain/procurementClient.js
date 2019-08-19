@@ -4,7 +4,7 @@ const path = require('path');
 const config = require('../config/api-config');
 var procurementJSON; //= require(path.join(__dirname, '../../truffle/build/contracts/Procurement.json'));
 if (process.env.NODE_ENV === "prod") {
-    procurementJSON = require(path.join(__dirname, '../truffle/build/contracts/Procurement.json'));
+    procurementJSON = require(path.join(__dirname, 'truffle/build/contracts/Procurement.json'));
 }
 else {
     procurementJSON = require(path.join(__dirname, '../../truffle/build/contracts/Procurement.json'));
@@ -12,10 +12,8 @@ else {
 const pizzaChainConstants = require('../constants/pizzaChainConstants');
 
 const configProperties = config.getProps();
-var connString = `${configProperties.rpc.host}:${configProperties.rpc.port}`;
-//connString = "http://" + connString;
-console.log("Connection string: " + connString);
-const web3Provider = new Web3.providers.HttpProvider(connString);
+
+const web3Provider = new Web3.providers.HttpProvider(`${configProperties.rpc.host}:${configProperties.rpc.port}`);
 const web3 = new Web3(web3Provider);
 
 var ProcurementContract = contract(procurementJSON);
@@ -81,6 +79,7 @@ module.exports = {
     getPOById: async (processId) => {
         //<TODO> Check if this calls with bytes32
         //<TODO> Craft response into JSON structure
+        console.log("processId = "+processId);
         let response = await procurementInstance.getPOById(processId);
 
         if (response.err) {
@@ -121,6 +120,17 @@ module.exports = {
         }
         else {
             console.log('ProcurementClient : Fetched getInvoiceList Response.');
+        }
+        return Promise.resolve(response);
+    },
+    updateInvoiceStatus: async (processId, status) => {
+
+        let response = await procurementInstance.updateInvoiceStatus(processId, status);
+        if (response.err) {
+            console.log('ProcurementClient : Error in updateInvoiceStatus.' + err);
+        }
+        else {
+            console.log('ProcurementClient : Fetched updateInvoiceStatus Response.');
         }
         return Promise.resolve(response);
     },

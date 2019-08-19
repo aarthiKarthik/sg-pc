@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "5165fcb0-ab39-47cb-b4b1-1ee1da83f039",
 		"name": "PizzaChain",
-		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
+		"description": "# Introduction\nPizzaChain API \n",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -322,7 +322,7 @@
 					"variable": [
 						{
 							"key": "poId",
-							"value": "15651915115902566809164589714"
+							"value": "156576962177657920"
 						}
 					]
 				}
@@ -431,19 +431,26 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:3003/invoice/:poId",
+					"raw": "localhost:3003/invoice/:poId/?itemPrice=50",
 					"host": [
 						"localhost"
 					],
 					"port": "3003",
 					"path": [
 						"invoice",
-						":poId"
+						":poId",
+						""
+					],
+					"query": [
+						{
+							"key": "itemPrice",
+							"value": "50"
+						}
 					],
 					"variable": [
 						{
 							"key": "poId",
-							"value": "15651915115902566809164589714"
+							"value": "156576962177657920"
 						}
 					]
 				},
@@ -635,7 +642,7 @@
 					"variable": [
 						{
 							"key": "invoiceId",
-							"value": "15651836792616075211804198535"
+							"value": "156576965632130080"
 						}
 					]
 				}
@@ -748,7 +755,7 @@
 					"variable": [
 						{
 							"key": "invoiceId",
-							"value": "15651836792616075211804198535"
+							"value": "156576965632130080"
 						},
 						{
 							"key": "payerId",
@@ -868,7 +875,7 @@
 					"variable": [
 						{
 							"key": "invoiceId",
-							"value": "15651836792616075211804198535"
+							"value": "156576965632130080"
 						}
 					]
 				},
@@ -1038,7 +1045,7 @@
 					"variable": [
 						{
 							"key": "tokenId",
-							"value": "0x145eb46dd6e892606f98912604924590134f4658754ccfbe83c7d46a4fc468b1"
+							"value": "156576965632130080"
 						},
 						{
 							"key": "supplierId",
@@ -1167,7 +1174,8 @@
 							"value": "145eb46dd6e892606f98912604924590134f4658754ccfbe83c7d46a4fc468b1"
 						}
 					]
-				}
+				},
+				"description": "To retrieve the metadata given the hash (ex. token id)"
 			},
 			"response": []
 		},
@@ -1243,7 +1251,8 @@
 					"path": [
 						"asset"
 					]
-				}
+				},
+				"description": "To generate Hash for Token ID given the metadata"
 			},
 			"response": []
 		},
@@ -1297,226 +1306,6 @@
 							"key": "tokenId",
 							"value": "10001"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "purchase-order list",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "c54dc563-0898-4533-8574-c553d758e3df",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"let jsonData = pm.response.json();",
-							"",
-							"var schema = {",
-							"  \"definitions\": {},",
-							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
-							"  \"$id\": \"http://example.com/root.json\",",
-							"  \"type\": \"object\",",
-							"  \"title\": \"The Root Schema\",",
-							"  \"required\": [",
-							"    \"code\",",
-							"    \"message\",",
-							"    \"data\",",
-							"    \"err\"",
-							"  ],",
-							"  \"properties\": {",
-							"    \"code\": {",
-							"      \"$id\": \"#/properties/code\",",
-							"      \"type\": \"integer\",",
-							"      \"title\": \"The Code Schema\",",
-							"      \"default\": 0,",
-							"      \"examples\": [",
-							"        200",
-							"      ]",
-							"    },",
-							"    \"message\": {",
-							"      \"$id\": \"#/properties/message\",",
-							"      \"type\": \"string\",",
-							"      \"title\": \"The Message Schema\",",
-							"      \"default\": \"\",",
-							"      \"examples\": [",
-							"        \"PO List Retrieved\"",
-							"      ],",
-							"      \"pattern\": \"^(.*)$\"",
-							"    },",
-							"    \"data\": {",
-							"      \"$id\": \"#/properties/data\",",
-							"      \"type\": \"array\",",
-							"      \"title\": \"The Data Schema\",",
-							"      \"items\": {",
-							"        \"$id\": \"#/properties/data/items\",",
-							"        \"type\": \"string\",",
-							"        \"title\": \"The Items Schema\",",
-							"        \"default\": \"\",",
-							"        \"examples\": [",
-							"          \"13bfa8e5c6de8e5feaaf5ce846\",",
-							"          \"13bfaa7eb866f893fb05674627\"",
-							"        ],",
-							"        \"pattern\": \"^(.*)$\"",
-							"      }",
-							"    },",
-							"    \"err\": {",
-							"      \"$id\": \"#/properties/err\",",
-							"      \"type\": \"null\",",
-							"      \"title\": \"The Err Schema\",",
-							"      \"default\": null,",
-							"      \"examples\": [",
-							"        null",
-							"      ]",
-							"    }",
-							"  }",
-							"};",
-							"",
-							"pm.test('Schema is valid', function() {",
-							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
-							"});",
-							"",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"code\");",
-							"    pm.expect(pm.response.text()).to.include(\"message\");",
-							"    pm.expect(pm.response.text()).to.include(\"data\");",
-							"    pm.expect(pm.response.text()).to.include(\"err\");",
-							"});",
-							"",
-							"pm.test(\"Test Value\", function () {",
-							"    pm.expect(jsonData.message).to.eql(\"PO List Retrieved\");",
-							"    pm.expect(jsonData.err).to.eql(null);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:3003/purchase-order",
-					"host": [
-						"localhost"
-					],
-					"port": "3003",
-					"path": [
-						"purchase-order"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "invoice list",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "712ec8de-66fa-4af2-991c-cb6030c794e3",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"let jsonData = pm.response.json();",
-							"",
-							"var schema = {",
-							"  \"definitions\": {},",
-							"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
-							"  \"$id\": \"http://example.com/root.json\",",
-							"  \"type\": \"object\",",
-							"  \"title\": \"The Root Schema\",",
-							"  \"required\": [",
-							"    \"code\",",
-							"    \"message\",",
-							"    \"data\",",
-							"    \"err\"",
-							"  ],",
-							"  \"properties\": {",
-							"    \"code\": {",
-							"      \"$id\": \"#/properties/code\",",
-							"      \"type\": \"integer\",",
-							"      \"title\": \"The Code Schema\",",
-							"      \"default\": 0,",
-							"      \"examples\": [",
-							"        200",
-							"      ]",
-							"    },",
-							"    \"message\": {",
-							"      \"$id\": \"#/properties/message\",",
-							"      \"type\": \"string\",",
-							"      \"title\": \"The Message Schema\",",
-							"      \"default\": \"\",",
-							"      \"examples\": [",
-							"        \"PO List Retrieved\"",
-							"      ],",
-							"      \"pattern\": \"^(.*)$\"",
-							"    },",
-							"    \"data\": {",
-							"      \"$id\": \"#/properties/data\",",
-							"      \"type\": \"array\",",
-							"      \"title\": \"The Data Schema\",",
-							"      \"items\": {",
-							"        \"$id\": \"#/properties/data/items\",",
-							"        \"type\": \"string\",",
-							"        \"title\": \"The Items Schema\",",
-							"        \"default\": \"\",",
-							"        \"examples\": [",
-							"          \"13bfa8e5c6de8e5feaaf5ce846\",",
-							"          \"13bfaa7eb866f893fb05674627\"",
-							"        ],",
-							"        \"pattern\": \"^(.*)$\"",
-							"      }",
-							"    },",
-							"    \"err\": {",
-							"      \"$id\": \"#/properties/err\",",
-							"      \"type\": \"null\",",
-							"      \"title\": \"The Err Schema\",",
-							"      \"default\": null,",
-							"      \"examples\": [",
-							"        null",
-							"      ]",
-							"    }",
-							"  }",
-							"};",
-							"",
-							"pm.test('Schema is valid', function() {",
-							"  pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
-							"});",
-							"",
-							"pm.test(\"Body matches string\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"code\");",
-							"    pm.expect(pm.response.text()).to.include(\"message\");",
-							"    pm.expect(pm.response.text()).to.include(\"data\");",
-							"    pm.expect(pm.response.text()).to.include(\"err\");",
-							"});",
-							"",
-							"pm.test(\"Test Value\", function () {",
-							"    pm.expect(jsonData.message).to.eql(\"Invoice List Retrieved\");",
-							"    pm.expect(jsonData.err).to.eql(null);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:3003/invoice",
-					"host": [
-						"localhost"
-					],
-					"port": "3003",
-					"path": [
-						"invoice"
 					]
 				}
 			},
@@ -2207,6 +1996,116 @@
 				"description": "invalid invoice id"
 			},
 			"response": []
+		},
+		{
+			"name": "transaction/:filter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/transaction/:filter",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"transaction",
+						":filter"
+					],
+					"variable": [
+						{
+							"key": "filter",
+							"value": "all"
+						}
+					]
+				},
+				"description": "To retrieve consolidated transactions \nPath Param : Filter (ex. PO/Invoice)"
+			},
+			"response": []
+		},
+		{
+			"name": "transaction/:id/:filter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/transaction/:id/:filter",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"transaction",
+						":id",
+						":filter"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "156576962177640427"
+						},
+						{
+							"key": "filter",
+							"value": "invoice"
+						}
+					]
+				},
+				"description": "To retrieve consolidated transactions by transaction id\n\nPath Param: \nFilter (ex. PO/Invoice)\nID (Transaction ID)"
+			},
+			"response": []
+		},
+		{
+			"name": "transaction-supplier/:supplierId/:filter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/transaction-supplier/:supplierId/:filter",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"transaction-supplier",
+						":supplierId",
+						":filter"
+					],
+					"variable": [
+						{
+							"key": "supplierId",
+							"value": "CHEESECO"
+						},
+						{
+							"key": "filter",
+							"value": "invoice"
+						}
+					]
+				},
+				"description": "To retrieve consolidated transactions by supplier id \nPath Param : \nFilter (ex. PO/Invoice)\nSupplier ID (ex.CHEESECO)"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "81315c79-4c46-45fd-8f95-85987f8d80a4",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "278b6075-6b39-4035-a738-c614ff973a52",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

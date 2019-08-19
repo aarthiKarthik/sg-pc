@@ -14,6 +14,109 @@ const fs = require('fs');
 const configProperties = config.getProps();
 let swarmServiceURl = `${configProperties.swarm.host}:${configProperties.swarm.port}/${configProperties.swarm.assetEndpoint}`;
 
+
+//get list of  transactions
+async function getTransactions(filter) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            //get list of po ids, invoice ids by transaction id
+            let transaction = await procurementService.getProcurements();
+           
+            let transactionDetails = await getTransactionDetails(transaction, filter.toUpperCase());
+
+            let response = new Response(200, "Transactions", transactionDetails, null);
+            resolve(response);
+        } catch (e) {
+            logger.error("controller : getTransactions : e = " + e);
+            reject(e);
+        }
+    })
+}
+
+//get list of pos issued to supplier
+async function getTransactionBySupplierId(supplierId, filter) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let transactionDetails = null;
+            
+            //get list of po ids, invoice ids by transaction id
+            let transaction = await procurementService.getProcurementBySupplierId(supplierId);
+            console.log("getTransactionBySupplierId = transaction = "+JSON.stringify(transaction));
+            
+            if(transaction){
+                transactionDetails = await getTransactionDetails(transaction, filter.toUpperCase());
+            }
+
+            let response = new Response(200, "Procurement Transactions By Supplier Retrieved", transactionDetails, null);
+            resolve(response);
+        } catch (e) {
+            logger.error("controller : getTransactionBySupplierId : e = " + e);
+            reject(e);
+        }
+    })
+}
+
+//get transaction by id
+async function getTransactionById(transactionId, filter) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            //get list of po ids, invoice ids by transaction id
+            let transaction = await procurementService.getProcurementById(transactionId);
+            let transactionDetails = await getTransactionDetails(transaction, filter.toUpperCase());
+
+            let response = new Response(200, "Procurement Transaction Retrieved", transactionDetails, null);
+            resolve(response);
+        } catch (e) {
+            logger.error("controller : getTransactionById : e = " + e);
+            reject(e);
+        }
+    })
+}
+
+//get transaction by token id
+async function getTransactionByTokenId(tokenId) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            //get list of po ids, invoice ids by token id
+            let transaction = await procurementService.getProcurementByTokenId(tokenId);
+
+            let response = new Response(200, "Procurement Transaction Retrieved", transaction, null);
+            resolve(response);
+        } catch (e) {
+            logger.error("controller : getTransactionByTokenId : e = " + e);
+            reject(e);
+        }
+    })
+}
+
+/** To get transaction details
+@param transaction object
+@param filter (Invoice/PO)
+*/
+async function getTransactionDetails(transaction, filter){
+    let transactionDetails = {
+        transactionId: null,
+        po: [],
+        invoice: []
+    };
+
+    for (var key in transaction) {
+        if (transaction.hasOwnProperty(key)) {
+            transactionDetails.transactionId = transaction[key].transaction_id;
+            if(transaction[key].po_id && filter !== "INVOICE"){
+                let poData = await getPOById(transaction[key].po_id);
+                transactionDetails.po.push(poData);
+            }
+            if(transaction[key].invoice_id && filter !== "PO"){
+                let invoiceData = await getInvoiceById(transaction[key].invoice_id);
+                transactionDetails.invoice.push(invoiceData);
+            }
+            
+        }
+    }
+    return transactionDetails;
+}
+
 async function issuePO(req) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -40,10 +143,10 @@ async function issuePO(req) {
                     let poResponse = await procurementClient.createPO(processId, constant.PO_STATUS.ISSUED, supplierPO);
 
                     if (poResponse) {
-
                         //record into procurement table
                         let procurementObj = {
                             transaction_id: transactionId,
+                            supplier_id: po[key].supplierId,
                             po_id: processId
                         }
                         
@@ -71,6 +174,7 @@ async function issuePO(req) {
 async function getPOById(poId) {
     return new Promise(async (resolve, reject) => {
         try {
+                logger.info("getPOById : poId = "+poId);
                 let res = await procurementClient.getPOById(poId);
 
                 //verify if empty value
@@ -104,29 +208,6 @@ async function getPOList() {
     })
 }
 
-async function getPODetailsList() {
-    return new Promise(async (resolve, reject) => {
-        try {
-            //get list of po ids
-            let poIdsResponse = await getPOList();
-            let poIds = poIdsResponse.data;
-            let poList = [];            
-
-            //get details by po id
-            for(var ctr in poIds){
-                let poResponse = await getPOById(poIds[ctr]);
-                poList.push(poResponse.data);
-            }
-
-            let response = new Response(200, "PO Details List Retrieved", poList, null);
-            resolve(response);
-        } catch (e) {
-            logger.error("controller : getPODetailsList : e = " + e);
-            reject(e);
-        }
-    })
-}
-
 async function ackPO(poId) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -154,7 +235,34 @@ async function ackPO(poId) {
     })
 }
 
-async function issueInvoice(poData) {
+async function updatedPOStatus(poId, status) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let res = 500;
+            let msg = "Failed";
+
+            let po = await procurementClient.getPOById(poId);
+            let poData = mapPOData(poId, po);
+
+            //update PO status
+            let updateResponse = await procurementClient.updatePOStatus(poData.poId, status);
+
+            if (updateResponse == true) {
+                res = 200;
+                msg = status;
+            }
+                
+            let response = new Response(res, msg, poData, null);
+
+            resolve(response);
+        } catch (e) {
+            logger.error("controller : updatedPOStatus : e = " + e);
+            reject(e);
+        }
+    })
+}
+
+async function issueInvoice(poData, itemPrice) {
     return new Promise(async (resolve, reject) => {
         try {
             let res = 500;
@@ -169,9 +277,9 @@ async function issueInvoice(poData) {
             //let itemPricePerUnit = await itemService.getItemPriceBySupplier(poData.supplierId, item);
             //get min. item price by item type
 
-            let itemPricePerUnit = Number(pizzaChainConstants.itemPrice[poData.itemType]);
+            //let itemPricePerUnit = Number(pizzaChainConstants.itemPrice[poData.itemType]);
             
-            let itemPrice = itemPricePerUnit * poData.qty;
+            //let itemPrice = itemPricePerUnit * poData.qty;
 
             let processId = fnGetUniqueID();
             let invoiceResponse = await procurementClient.createInvoice(processId, constant.INVOICE_STATUS.ISSUED, itemPrice, poData);
@@ -181,7 +289,7 @@ async function issueInvoice(poData) {
                 msg = "Invoice Issued";
 
                 //update invoice id in procurement table
-                await procurementService.updateInvoiceId(poData.poId, processId);
+                await procurementService.updateInvoice(poData.poId, processId, itemPrice);
             }
             
             let response = new Response(res, msg, processId, null);
@@ -289,6 +397,8 @@ async function payment(invoiceId, fromId, toId) {
                 status = 200;
                 msg = "Payment done";
                 receipt = transferDetails.receipt;
+
+                await procurementClient.updateInvoiceStatus(invoiceId, constant.INVOICE_STATUS.PAYMENT_RECEIVED);
             }
                 
             let response = new Response(status, msg, receipt, null);
@@ -338,6 +448,12 @@ async function makeTokens(invoiceId) {
                         supplierId: invoiceData.supplierId,
                         tokenId: mintResponse.tokenId
                     }
+
+                    //update po status
+                    await updatedPOStatus(invoiceData.poId, constant.PO_STATUS.PENDING_DELIVERY);
+
+                    //update token id in procurement table
+                    await procurementService.updateTokenId(invoiceId, mintResponse.tokenId);
                 }
             }
                 
@@ -380,7 +496,7 @@ async function generateQRCode(supplierId, invoiceId) {
     })
 }
 
-async function transferToken(tokenId, fromId, toId, poId) {
+async function transferToken(tokenId, fromId, toId, transaction) {
     return new Promise(async (resolve, reject) => {
         let status;
         try {
@@ -398,7 +514,11 @@ async function transferToken(tokenId, fromId, toId, poId) {
                 msg = "Transfer done";
 
                 //update po status
-                await procurementClient.updatePOStatus(poId, constant.PO_STATUS.DELIVERED);
+                await procurementClient.updatePOStatus(transaction.data[0].po_id, constant.PO_STATUS.DELIVERED);
+
+                //update invoice status
+                await procurementClient.updatePOStatus(transaction.data[0].invoice_id, constant.INVOICE_STATUS.COMPLETED);
+
             }
              
             let response = new Response(status, msg, transferDetails, null);
@@ -440,6 +560,7 @@ async function retrieveMetadata(tokenId) {
 
 async function getMetadata(tokenId, useSwarm){
     let tokenMetadata = null;
+
     try{
         if(useSwarm == true){
             if(tokenId.startsWith("0x")){
@@ -450,7 +571,7 @@ async function getMetadata(tokenId, useSwarm){
             logger.info("controller : getMetadata : tokenMetadata = " + JSON.stringify(tokenMetadata));
         }else{
             let res = await itemTokenClient.getMetadata(tokenId);
-            tokenMetadata = mapTokenData(res);
+            tokenMetadata = mapTokenData(tokenId, res);
         }
         return Promise.resolve(tokenMetadata);
     }catch(e){
@@ -460,7 +581,9 @@ async function getMetadata(tokenId, useSwarm){
 }
 
 function fnGetUniqueID(){
-    return Date.now() + Math.random().toString().slice(2);
+    //return Date.now() + Math.random().toString(36).slice(2);
+
+    return (Date.now() + Math.random().toString().substr(2, 5));
 }
 
 function mapInvoiceData(invoiceId, invoice){
@@ -473,7 +596,8 @@ function mapInvoiceData(invoiceId, invoice){
         "itemType": itemType,
         "qty" : Number(invoice[3]),
         "uom" : invoice[4],
-        "price": Number(invoice[5])
+        "price": Number(invoice[5]),
+        "status": invoice[6]
     }
     return invoiceData;
 }
@@ -486,7 +610,8 @@ function mapPOData(poId, po){
         "supplierId": po[0],
         "itemType": itemType,
         "qty" : Number(po[2]),
-        "uom" : po[3]
+        "uom" : po[3],
+        "status": po[4]
     }
     return poData;
 }
@@ -559,8 +684,11 @@ module.exports = {
     transferToken,
     getInvoiceList,
     getOwnedTokenBalance,
-    getPODetailsList,
     getInvoiceDetailsList,
-    retrieveMetadata
+    retrieveMetadata,
+    getTransactionBySupplierId,
+    getTransactionById,
+    getTransactions,
+    getTransactionByTokenId
 };
 

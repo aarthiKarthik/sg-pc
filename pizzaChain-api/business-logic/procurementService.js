@@ -16,6 +16,20 @@ let createProcurement = async (objData) => {
 }
 
 /**
+ * Method used to get procurement list
+ * @returns {*Object} dn response
+ */
+let getProcurements = async () => {
+    try {
+        let response = await mongoDao.getData(constant.MODEL_TYPES.PROCUREMENT);
+
+        return Promise.resolve(response);
+    } catch (e) {
+        return Promise.reject(e)
+    }
+}
+
+/**
  * Method used to get procurement by id
  * @param {*integer} transactionId 
  * @returns {*Object} dn response
@@ -32,13 +46,13 @@ let getProcurementById = async (transactionId) => {
 }
 
 /**
- * Method used to get transaction by po id
- * @param {*integer} poid 
+ * Method used to get procurement by supplier id
+ * @param {*integer} supplierId 
  * @returns {*Object} dn response
  */
-let getTransactionByPOId = async (poId) => {
+let getProcurementBySupplierId = async (supplierId) => {
     try {
-        let query = { "po_id": poId};
+        let query = { "supplier_id": supplierId};
         let response = await mongoDao.getData(constant.MODEL_TYPES.PROCUREMENT, query);
 
         return Promise.resolve(response);
@@ -48,17 +62,52 @@ let getTransactionByPOId = async (poId) => {
 }
 
 /**
- * Method used to update invoice id
- * @param {*String} invoiceId 
- * @param {*String} poId 
+ * Method used to get procurement by token id
+ * @param {*String} tokenId 
  * @returns {*Object} dn response
  */
-let updateInvoiceId = async (poId, invoiceId) => {
+let getProcurementByTokenId = async (tokenId) => {
+    try {
+        let query = { "token_id": tokenId};
+        let response = await mongoDao.getData(constant.MODEL_TYPES.PROCUREMENT, query);
+
+        return Promise.resolve(response);
+    } catch (e) {
+        return Promise.reject(e)
+    }
+}
+
+/**
+ * Method used to update invoice
+ * @param {*String} invoiceId 
+ * @param {*String} poId 
+ * @param {*Number} itemPrice 
+ * @returns {*Object} dn response
+ */
+let updateInvoice = async (poId, invoiceId, itemPrice) => {
     try {
         
         let query =  { po_id: poId};
-        let condition = { $set : { invoice_id: invoiceId }} ; 
-        console.log('updateInvoiceId query' ,  query, condition)
+        let condition = { $set : { invoice_id: invoiceId, item_price: itemPrice}} ; 
+        let response = await mongoDao.updateData(constant.MODEL_TYPES.PROCUREMENT, query, condition);
+
+        return Promise.resolve(response);
+    } catch (e) {
+        return Promise.reject(e)
+    }
+}
+
+/**
+ * Method used to update token id
+ * @param {*String} invoiceId 
+ * @param {*String} tokenId 
+ * @returns {*Object} dn response
+ */
+let updateTokenId = async (invoiceId, tokenId) => {
+    try {
+        
+        let query =  { invoice_id: invoiceId};
+        let condition = { $set : { token_id: tokenId}} ; 
         let response = await mongoDao.updateData(constant.MODEL_TYPES.PROCUREMENT, query, condition);
 
         return Promise.resolve(response);
@@ -70,6 +119,9 @@ let updateInvoiceId = async (poId, invoiceId) => {
 module.exports={
     createProcurement,
     getProcurementById,
-    updateInvoiceId,
-    getTransactionByPOId
+    updateInvoice,
+    getProcurementBySupplierId,
+    getProcurements,
+    updateTokenId,
+    getProcurementByTokenId
 }

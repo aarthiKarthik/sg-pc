@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 PROCUREMENT_SCHEMA = Schema({
-    transaction_id: { type: Number },
-    po_id: { type: Number },
-    invoice_id: { type: Number },
-    token_id: { type: Number },
+    transaction_id: { type: String },
+    supplier_id: {type: String},
+    po_id: { type: String },
+    invoice_id: { type: String },
+    token_id: { type: String },
+    item_price: {type: Number},
     created_date: { type: Date, default: new Date() },
 });
 
