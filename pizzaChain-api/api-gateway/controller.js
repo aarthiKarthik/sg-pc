@@ -496,6 +496,10 @@ async function generateQRCode(supplierId, invoiceId) {
     })
 }
 
+function getFileNameByTokenId(tokenId) {
+    return configProperties.qrCode.path+ tokenId + '.svg'
+}
+
 async function transferToken(tokenId, fromId, toId, transaction) {
     return new Promise(async (resolve, reject) => {
         let status;
@@ -689,6 +693,7 @@ module.exports = {
     getTransactionBySupplierId,
     getTransactionById,
     getTransactions,
-    getTransactionByTokenId
+    getTransactionByTokenId,
+    getFileNameByTokenId
 };
 

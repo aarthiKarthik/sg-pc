@@ -234,6 +234,19 @@ let init = (router) => {
                 res.status(response.code).json(response);
             }
         })
+
+    router.route('/download/:tokenId')
+        .get(async (req, res) => {
+            let response;
+            try {
+                res.download(controller.getFileNameByTokenId(req.params.tokenId)); 
+
+            } catch (e) {
+                logger.error("API Gateway : download/:tokenId : e = " + e);
+                response = new Response(500, "Error in downloading file", {}, e);
+                res.status(response.code).json(response);
+            }
+    });
 }
 
 module.exports.init = init;
