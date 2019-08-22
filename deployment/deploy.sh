@@ -178,6 +178,9 @@ if [ -e "$DEPLOYMENT_SOURCE/truffle" ]; then
   ./node_modules/.bin/truffle migrate --reset --network pcvm
 fi
 
+cd "$DEPLOYMENT_TARGET"
+eval mkdir -p images/qr-codes
+
 # 4. App
 # echo App work
 # if [ -e "$DEPLOYMENT_TARGET" ]; then
