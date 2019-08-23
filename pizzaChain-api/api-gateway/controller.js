@@ -97,7 +97,8 @@ async function getTransactionDetails(transaction, filter){
     let transactionDetails = {
         transactionId: null,
         po: [],
-        invoice: []
+        invoice: [],
+        tokenId: null
     };
 
     for (var key in transaction) {
@@ -111,7 +112,7 @@ async function getTransactionDetails(transaction, filter){
                 let invoiceData = await getInvoiceById(transaction[key].invoice_id);
                 transactionDetails.invoice.push(invoiceData);
             }
-            
+            transactionDetails.tokenId = transaction[key].token_id;
         }
     }
     return transactionDetails;
