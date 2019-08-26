@@ -11,7 +11,8 @@ let supplierPriceObj = {
 let itemTypes = {
     CHEESE : 1,
     DOUGH : 2,
-    SAUCE: 3
+    SAUCE: 3,
+    TOPPINGS: 4
 }
 
 let accounts = {

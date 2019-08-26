@@ -94,28 +94,44 @@ async function getTransactionByTokenId(tokenId) {
 @param filter (Invoice/PO)
 */
 async function getTransactionDetails(transaction, filter){
-    let transactionDetails = {
-        transactionId: null,
-        po: [],
-        invoice: [],
-        tokenId: null
-    };
+    let transactions = [];
 
     for (var key in transaction) {
+
+        let transactionDetails = {
+            transactionId: null,
+            po: [],
+            invoice: [],
+            tokenId: null
+        };
+
         if (transaction.hasOwnProperty(key)) {
-            transactionDetails.transactionId = transaction[key].transaction_id;
+            //console.log("transaction[key].transaction_id = "+transaction[key].transaction_id);
+
             if(transaction[key].po_id && filter !== "INVOICE"){
                 let poData = await getPOById(transaction[key].po_id);
-                transactionDetails.po.push(poData);
+                if(poData.code == 200){
+                    transactionDetails.po.push(poData);
+                    transactionDetails.transactionId = transaction[key].transaction_id;
+                }
             }
             if(transaction[key].invoice_id && filter !== "PO"){
                 let invoiceData = await getInvoiceById(transaction[key].invoice_id);
-                transactionDetails.invoice.push(invoiceData);
+                if(invoiceData.code == 200){
+                    transactionDetails.invoice.push(invoiceData);
+                    transactionDetails.transactionId = transaction[key].transaction_id;
+                }
             }
+
             transactionDetails.tokenId = transaction[key].token_id;
+
+            if(transactionDetails.transactionId){
+                transactions.push(transactionDetails);
+            }
+            
         }
     }
-    return transactionDetails;
+    return transactions;
 }
 
 async function issuePO(req) {
