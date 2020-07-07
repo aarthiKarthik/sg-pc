@@ -17,7 +17,7 @@
     "eth-gas-reporter": "^0.1.12",
     "ethereumjs-util": "^6.1.0",
     "ganache-cli": "^6.5.1",
-    "npm": "^6.4.1",
+    "npm": "^6.14.6",
     "openzeppelin-solidity": "^2.1.2",
     "openzeppelin-test-helpers": "^0.1.5",
     "truffle": "^5.0.31",
