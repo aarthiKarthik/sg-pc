@@ -10,9 +10,9 @@
   "author": "duncan.westland@uk.ey.com",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.20.1",
     "cors": "^2.8.4",
-    "express": "^4.16.2",
+    "express": "^4.18.2",
     "jsonfile": "^4.0.0",
     "keccakjs": "^0.2.1",
     "leveldown": "^2.0.0",
